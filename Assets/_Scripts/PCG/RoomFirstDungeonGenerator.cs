@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -46,9 +47,11 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             roomCenters.Add((Vector2Int)Vector3Int.RoundToInt(roomsList[i].center));
 
             var roomCenter = new Vector2Int(Mathf.RoundToInt(roomsList[i].center.x), Mathf.RoundToInt(roomsList[i].center.y));
-            var randomFloor = RunRandomWalk(randomWalkParameters, roomCenter);
-        
-            floor.UnionWith(randomFloor);
+            int extraWalkFromCornersAmount = Random.Range(0, 5);
+            var randomWalkedFloor = RandomWalkFromRoomCorners(roomsList[i], extraWalkFromCornersAmount, randomWalkParameters);
+
+
+            floor.UnionWith(randomWalkedFloor);
         }
 
         firstGeneratedRoom = roomsList[0];
@@ -96,6 +99,49 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             corridors.UnionWith(newCorridor);
         }
         return corridors;
+    }
+
+    private HashSet<Vector2Int> RandomWalkFromRoomCorners(BoundsInt room, int cornersToWalkFrom, SimpleRandomWalkSO parameters)
+    {
+        System.Random random = new System.Random();
+        HashSet<Vector2Int> randomFloor = new HashSet<Vector2Int>();
+
+        Mathf.Clamp(cornersToWalkFrom, 0, 4);
+
+        // Calculate quarter points relative to the center of the room
+        float quarterWidthX1 = room.center.x - (room.center.x - room.min.x) / 2;
+        float quarterWidthX2 = room.center.x + (room.max.x - room.center.x) / 2;
+        float quarterHeightY1 = room.center.y - (room.center.y - room.min.y) / 2;
+        float quarterHeightY2 = room.center.y + (room.max.y - room.center.y) / 2;
+
+        Vector2Int bottomLeftQuarter = new Vector2Int((int)quarterWidthX1, (int)quarterHeightY1);
+        Vector2Int bottomRightQuarter = new Vector2Int((int)quarterWidthX2, (int)quarterHeightY1);
+        Vector2Int topLeftQuarter = new Vector2Int((int)quarterWidthX1, (int)quarterHeightY2);
+        Vector2Int topRightQuarter = new Vector2Int((int)quarterWidthX2, (int)quarterHeightY2);
+
+        List<Vector2Int> cornerStartPoints = new List<Vector2Int>()
+        {
+            bottomLeftQuarter,
+            bottomRightQuarter,
+            topLeftQuarter,
+            topRightQuarter
+        };
+
+        for (int i = cornerStartPoints.Count - 1; i > 0; i--)
+        {
+            int randomIndex = random.Next(i + 1); 
+            Vector2Int temp = cornerStartPoints[i];
+            cornerStartPoints[i] = cornerStartPoints[randomIndex];
+            cornerStartPoints[randomIndex] = temp;
+        }
+
+        for (int i = 0; i < cornersToWalkFrom; i++)
+        {
+            var floor = RunRandomWalk(parameters, cornerStartPoints[i]);
+            randomFloor.UnionWith(floor);
+        }
+
+        return randomFloor;
     }
 
     private HashSet<Vector2Int> CreateCorridor(Vector2Int currentRoomCenter, Vector2Int destination)
