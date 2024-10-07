@@ -30,7 +30,12 @@ public class TilemapVisualizer : MonoBehaviour
     {
         int typeAsInt = Convert.ToInt32(binaryType, 2);
         TileBase tile = null;
-        if (WallTypesHelper.wallTop.Contains(typeAsInt))
+
+        if (WallTypesHelper.floor.Contains(typeAsInt))
+        {
+            tile = floorTile;
+        }
+        else if (WallTypesHelper.wallTop.Contains(typeAsInt))
         {
             tile = wallTop;
         }else if (WallTypesHelper.wallSideRight.Contains(typeAsInt))

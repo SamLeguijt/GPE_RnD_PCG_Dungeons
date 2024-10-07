@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 public static class ProceduralGenerationAlgorithms
 {
     
-    public static HashSet<Vector2Int> SimpleRandomWalk(Vector2Int startPosition, int walkLength)
+    public static HashSet<Vector2Int> SimpleRandomWalk(Vector2Int startPosition, int walkLength, int stepSize)
     {
         HashSet<Vector2Int> path = new HashSet<Vector2Int>();
 
@@ -16,7 +16,7 @@ public static class ProceduralGenerationAlgorithms
 
         for (int i = 0; i < walkLength; i++)
         {
-            var newPosition = previousPosition + Direction2D.GetRandomCardinalDirection();
+            var newPosition = previousPosition + Direction2D.GetRandomCardinalDirection() * stepSize;
             path.Add(newPosition);
             previousPosition = newPosition;
         }

@@ -4,9 +4,14 @@ using UnityEngine;
 
 public static class WallTypesHelper
 {
+    public static HashSet<int> floor = new HashSet<int>()
+    {
+        0b1111
+    };
+
     public static HashSet<int> wallTop = new HashSet<int>
     {
-        0b1111,
+        //0b1111,
         0b0110,
         0b0011,
         0b0010,
