@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
-public class Room
+public class Room : MonoBehaviour
 {
     [field: SerializeField] public ThemesEnum RoomTheme { get; private set; }
 
@@ -14,45 +14,50 @@ public class Room
 
     public BoundsInt roomBounds;
 
-    public void GenerateRoom(Vector3Int position, Vector2 sizeMin, Vector2 sizeMax)
+    private static List<Color> tempThemeColors = new List<Color>
     {
-        this.roomMinSize = sizeMin;
-        this.roomMaxSize = sizeMax;
+        Color.cyan,
+        Color.red,
+        Color.green,
+    };
 
-        Vector3Int randomSize = new Vector3Int(Mathf.RoundToInt(Random.Range(sizeMin.x, sizeMax.x)), Mathf.RoundToInt(Random.Range(sizeMin.y, sizeMax.y)));
-
-        roomBounds = new BoundsInt(position, randomSize);
-
-        Debug.Log("Generated");
-    
-    }
-
-    public Room(BoundsInt bounds)
+    public void SetupRoom(BoundsInt bounds, ThemesEnum theme = ThemesEnum.None)
     {
         roomBounds = bounds;
+        transform.position = roomBounds.center;
+        RoomTheme = GetTheme(theme);
     }
 
-    public void PaintRoom(TilemapVisualizer tilemapVisualizer)
+    public void DrawRoomTiles(TilemapVisualizer tilemapVisualizer)
     {
         this.tilemapVisualizer = tilemapVisualizer;
     }
 
+    private ThemesEnum GetTheme(ThemesEnum desiredTheme = ThemesEnum.None)
+    {
+        ThemesEnum theme = ThemesEnum.None;
+
+        if (desiredTheme != ThemesEnum.None)
+            theme = desiredTheme;
+        else
+        {
+            int randomSelection = Random.Range(1, RoomGenerator.RoomThemes.Count +1);
+            theme = (ThemesEnum)randomSelection;
+        }
+
+        return theme;
+    }
+
     public void OnDrawGizmos()
     {
-        // Check if roomBounds has been initialized
         if (roomBounds.size != Vector3Int.zero)
         {
-            // Set the color for the Gizmos (optional)
-            Gizmos.color = Color.green;
+            Gizmos.color = tempThemeColors[(int)RoomTheme -1];
 
-            // Calculate the center of the room bounds
             Vector3 roomCenter = roomBounds.center;
             Vector3 roomSize = roomBounds.size;
 
-            // Draw a wireframe cube representing the room's bounds
             Gizmos.DrawWireCube(roomCenter, roomSize);
         }
     }
-
-    
 }

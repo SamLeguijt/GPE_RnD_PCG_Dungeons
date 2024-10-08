@@ -7,10 +7,6 @@ using Random = UnityEngine.Random;
 
 public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 {
-    public static BoundsInt FirstGeneratedRoom => firstGeneratedRoom;
-    public static List<Room> ActiveRooms = new List<Room>();
-
-
     [SerializeField]
     private int minRoomWidth = 4, minRoomHeight = 4;
     [SerializeField]
@@ -20,7 +16,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     private int offset = 1;
     [SerializeField]
     private bool useRandomWalkRooms = false;
-    private static BoundsInt firstGeneratedRoom;
 
     protected override void RunProceduralGeneration()
     {
@@ -40,7 +35,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         else
         {
             roomsList = ApplyOffsetToRooms(roomsList);
-            ActiveRooms = CreateRooms(roomsList);
             floor = PopulateRoomBounds(roomsList);
         }
 
@@ -58,8 +52,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             floor.UnionWith(randomWalkedFloor);
         }
 
-        firstGeneratedRoom = roomsList[0];
-
         HashSet<Vector2Int> corridors = ConnectRooms(roomCenters);
         floor.UnionWith(corridors);
 
@@ -74,14 +66,13 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         foreach (var room in rooms)
         {
             // Apply offset to position and size
-            Vector3Int newMin = room.min + new Vector3Int(offset, offset, 0);  // Shift the bottom-left corner by the offset
+            Vector3Int newMin = room.min + new Vector3Int(offset, offset, 0);  
             Vector3Int newSize = new Vector3Int(
-                room.size.x - 2 * offset,   // Reduce width by twice the offset
-                room.size.y - 2 * offset,   // Reduce height by twice the offset
-                room.size.z                 // Keep the z size unchanged (assuming 2D layout)
+                room.size.x - 2 * offset,   
+                room.size.y - 2 * offset,   
+                room.size.z                 
             );
 
-            // Create new room bounds with adjusted min position and size
             BoundsInt adjustedRoom = new BoundsInt(newMin, newSize);
             offsetRooms.Add(adjustedRoom);
         }
@@ -134,7 +125,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         Mathf.Clamp(cornersToWalkFrom, 0, 4);
 
-        // Calculate quarter points relative to the center of the room
         float quarterWidthX1 = room.center.x - (room.center.x - room.min.x) / 2;
         float quarterWidthX2 = room.center.x + (room.max.x - room.center.x) / 2;
         float quarterHeightY1 = room.center.y - (room.center.y - room.min.y) / 2;
@@ -242,41 +232,5 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             }
         }
         return floor;
-    }
-
-    public static List<Room> CreateRooms(List<BoundsInt> roomBounds)
-    {
-        List<Room> rooms = new List<Room>();
-
-        for (int i = 0; i < roomBounds.Count; i++)
-        {
-            Room room = new Room(roomBounds[i]);
-            rooms.Add(room);
-        }
-
-        return rooms;
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (ActiveRooms.Count < 0)
-            return;
-
-        foreach (Room room in ActiveRooms)
-        {
-            // Check if roomBounds has been initialized
-            if (room.roomBounds.size != Vector3Int.zero)
-            {
-                // Set the color for the Gizmos (optional)
-                Gizmos.color = Color.green;
-
-                // Calculate the center of the room bounds
-                Vector3 roomCenter = room.roomBounds.center;
-                Vector3 roomSize = room.roomBounds.size;
-
-                // Draw a wireframe cube representing the room's bounds
-                Gizmos.DrawWireCube(roomCenter, roomSize);
-            }
-        }
     }
 }

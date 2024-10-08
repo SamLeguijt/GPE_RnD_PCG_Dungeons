@@ -41,10 +41,11 @@ public static class ProceduralGenerationAlgorithms
 
     public static List<BoundsInt> BinarySpacePartitioning(BoundsInt spaceToSplit, int minWidth, int minHeight)
     {
-        
         Queue<BoundsInt> roomsQueue = new Queue<BoundsInt>();
         List<BoundsInt> roomsList = new List<BoundsInt>();
+
         roomsQueue.Enqueue(spaceToSplit);
+        
         while (roomsQueue.Count > 0)
         {
             var room = roomsQueue.Dequeue();
@@ -82,66 +83,8 @@ public static class ProceduralGenerationAlgorithms
                 }
             }
         }
-
-        Debug.Log("BSP Rooms: " + roomsList.Count);
 
         return roomsList;
-    }
-
-    public static List<Room> BinarySpacePartitioning(BoundsInt spaceToSplit, int minWidth, int minHeight, bool trueorfalse = false)
-    {
-        Queue<BoundsInt> roomsQueue = new Queue<BoundsInt>();
-        List<BoundsInt> roomsList = new List<BoundsInt>();
-
-        roomsQueue.Enqueue(spaceToSplit);
-
-        while (roomsQueue.Count > 0)
-        {
-            var room = roomsQueue.Dequeue();
-            if (room.size.y >= minHeight && room.size.x >= minWidth)
-            {
-                if (Random.value < 0.5f)
-                {
-                    if (room.size.y >= minHeight * 2)
-                    {
-                        SplitHorizontally(minHeight, roomsQueue, room);
-                    }
-                    else if (room.size.x >= minWidth * 2)
-                    {
-                        SplitVertically(minWidth, roomsQueue, room);
-                    }
-                    else if (room.size.x >= minWidth && room.size.y >= minHeight)
-                    {
-                        roomsList.Add(room);
-                    }
-                }
-                else
-                {
-                    if (room.size.x >= minWidth * 2)
-                    {
-                        SplitVertically(minWidth, roomsQueue, room);
-                    }
-                    else if (room.size.y >= minHeight * 2)
-                    {
-                        SplitHorizontally(minHeight, roomsQueue, room);
-                    }
-                    else if (room.size.x >= minWidth && room.size.y >= minHeight)
-                    {
-                        roomsList.Add(room);
-                    }
-                }
-            }
-        }
-        Debug.Log("BSP Rooms: " + roomsList.Count); 
-        List<Room> activeRooms = new List<Room>();
-        for (int i = 0; i < roomsList.Count; i++)
-        {
-            Room room = new Room(roomsList[i]);
-            activeRooms.Add(room);
-
-        }
-
-        return activeRooms;
     }
 
     private static void SplitVertically(int minWidth, Queue<BoundsInt> roomsQueue, BoundsInt room)
