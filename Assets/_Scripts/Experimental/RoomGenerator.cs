@@ -13,6 +13,9 @@ public class RoomGenerator : AbstractDungeonGenerator
         ThemesEnum.Grass 
     };
 
+    [Header("References")]
+    [SerializeField] private ThemeDataContainer themeDataContainer = null;
+
     [Header("Generate settings")]
     [SerializeField] private Vector2Int dungeonSize = Vector2Int.one;
     [SerializeField] private Vector2Int roomSizeMin = Vector2Int.one;
@@ -21,6 +24,8 @@ public class RoomGenerator : AbstractDungeonGenerator
 
     private HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
     private GameObject roomParentObject = null;
+
+    [SerializeField] private TilemapDrawer tilemapDrawer = null;
 
     private void Start()
     {
@@ -31,6 +36,7 @@ public class RoomGenerator : AbstractDungeonGenerator
     {
         DestroyImmediate(roomParentObject);
         CurrentRooms.Clear();
+        tilemapDrawer.Clear();
         GenerateDungeonFloor();
     }
 
@@ -76,7 +82,7 @@ public class RoomGenerator : AbstractDungeonGenerator
             roomObject.transform.SetParent(roomParentObject.transform);
             Room room = roomObject.GetComponent<Room>();
 
-            room.SetupRoom(roomBounds[i]);
+            room.SetupRoom(roomBounds[i], tilemapDrawer,themeDataContainer);
             rooms.Add(room);
         }
 
@@ -205,19 +211,4 @@ public class RoomGenerator : AbstractDungeonGenerator
             }
         }
     }
-
-
-
-    /* Room tiles.
-     * 1) SO that holds info for each theme
-     * Floor tiles, puddle tiles, obstacle and decoration tiles.
-     * +Could be relatively easy to implemen and expand on.
-     * -Assigning multiple tiles in correct order might become harder.
-     * 2) SO that holds info all possible tiles, categorized by theme in inspector
-     * +All tiles in one place
-     * +Possibly easier to implement tile ordering and neighbours.
-     * - Tedious to expand on
-     * - Might become cluttered
-     * - Basically the same as 1, but in one place.
-     */
 }
