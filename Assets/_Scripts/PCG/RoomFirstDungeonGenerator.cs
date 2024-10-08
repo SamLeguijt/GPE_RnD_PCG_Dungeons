@@ -8,6 +8,8 @@ using Random = UnityEngine.Random;
 public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 {
     public static BoundsInt FirstGeneratedRoom => firstGeneratedRoom;
+    public static List<Room> ActiveRooms = new List<Room>();
+
 
     [SerializeField]
     private int minRoomWidth = 4, minRoomHeight = 4;
@@ -33,11 +35,13 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         if (useRandomWalkRooms)
         {
-            floor = CreateRandomFloor(roomsList);
+            floor = PopulateRoomRandomly(roomsList);
         }
         else
         {
-            floor = CreateSimpleRooms(roomsList);
+            roomsList = ApplyOffsetToRooms(roomsList);
+            ActiveRooms = CreateRooms(roomsList);
+            floor = PopulateRoomBounds(roomsList);
         }
 
         List<Vector2Int> roomCenters = new List<Vector2Int>();
@@ -63,7 +67,29 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         WallGenerator.CreateWalls(floor, tilemapVisualizer);
     }
 
-    private HashSet<Vector2Int> CreateRandomFloor(List<BoundsInt> roomsList)
+    private List<BoundsInt> ApplyOffsetToRooms(List<BoundsInt> rooms)
+    {
+        List<BoundsInt> offsetRooms = new List<BoundsInt>();
+
+        foreach (var room in rooms)
+        {
+            // Apply offset to position and size
+            Vector3Int newMin = room.min + new Vector3Int(offset, offset, 0);  // Shift the bottom-left corner by the offset
+            Vector3Int newSize = new Vector3Int(
+                room.size.x - 2 * offset,   // Reduce width by twice the offset
+                room.size.y - 2 * offset,   // Reduce height by twice the offset
+                room.size.z                 // Keep the z size unchanged (assuming 2D layout)
+            );
+
+            // Create new room bounds with adjusted min position and size
+            BoundsInt adjustedRoom = new BoundsInt(newMin, newSize);
+            offsetRooms.Add(adjustedRoom);
+        }
+
+        return offsetRooms;
+    }
+
+    private HashSet<Vector2Int> PopulateRoomRandomly(List<BoundsInt> roomsList)
     {
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
 
@@ -192,14 +218,23 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         return closest;
     }
 
-    private HashSet<Vector2Int> CreateSimpleRooms(List<BoundsInt> roomsList)
+    private HashSet<Vector2Int> PopulateRoomBounds(List<BoundsInt> roomsList)
     {
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
         foreach (var room in roomsList)
         {
-            for (int col = offset; col < room.size.x - offset; col++)
+            //for (int col = offset; col < room.size.x - offset; col++)
+            //{
+            //    for (int row = offset; row < room.size.y - offset; row++)
+            //    {
+            //        Vector2Int position = (Vector2Int)room.min + new Vector2Int(col, row);
+            //        floor.Add(position);
+            //    }
+            //}
+            
+            for (int col = 0; col < room.size.x; col++)
             {
-                for (int row = offset; row < room.size.y - offset; row++)
+                for (int row = 0; row < room.size.y; row++)
                 {
                     Vector2Int position = (Vector2Int)room.min + new Vector2Int(col, row);
                     floor.Add(position);
@@ -207,5 +242,41 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             }
         }
         return floor;
+    }
+
+    public static List<Room> CreateRooms(List<BoundsInt> roomBounds)
+    {
+        List<Room> rooms = new List<Room>();
+
+        for (int i = 0; i < roomBounds.Count; i++)
+        {
+            Room room = new Room(roomBounds[i]);
+            rooms.Add(room);
+        }
+
+        return rooms;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (ActiveRooms.Count < 0)
+            return;
+
+        foreach (Room room in ActiveRooms)
+        {
+            // Check if roomBounds has been initialized
+            if (room.roomBounds.size != Vector3Int.zero)
+            {
+                // Set the color for the Gizmos (optional)
+                Gizmos.color = Color.green;
+
+                // Calculate the center of the room bounds
+                Vector3 roomCenter = room.roomBounds.center;
+                Vector3 roomSize = room.roomBounds.size;
+
+                // Draw a wireframe cube representing the room's bounds
+                Gizmos.DrawWireCube(roomCenter, roomSize);
+            }
+        }
     }
 }

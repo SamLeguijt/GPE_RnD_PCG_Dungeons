@@ -17,6 +17,7 @@ namespace Minifantasy
         private void Start()
         {
             startingPosition = transform.position;
+
         }
 
         private void Update()
