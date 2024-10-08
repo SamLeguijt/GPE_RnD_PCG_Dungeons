@@ -50,6 +50,7 @@ public class RoomGenerator : AbstractDungeonGenerator
             roomCenters.Add((Vector2Int)Vector3Int.RoundToInt(roomsBounds[i].center));
         }
 
+        // Might remove later.
         corridors = ConnectRooms(roomCenters);
         roomsFloorGrid.UnionWith(corridors);
     }
@@ -67,6 +68,8 @@ public class RoomGenerator : AbstractDungeonGenerator
         List<Room> rooms = new List<Room>();
 
         roomParentObject = new GameObject("Rooms");
+        roomParentObject.transform.SetParent(this.transform);
+
         for (int i = 0; i < roomBounds.Count; i++)
         {
             GameObject roomObject = new GameObject($"Room_{i}", typeof(Room));
@@ -78,8 +81,8 @@ public class RoomGenerator : AbstractDungeonGenerator
         }
 
         return rooms;
-
     }
+
     private HashSet<Vector2Int> ConnectRooms(List<Vector2Int> roomCenters)
     {
         HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
@@ -88,7 +91,7 @@ public class RoomGenerator : AbstractDungeonGenerator
 
         while (roomCenters.Count > 0)
         {
-            Vector2Int closest = FindClosestPointTo(currentRoomCenter, roomCenters);
+            Vector2Int closest = FindClosestRoomTo(currentRoomCenter, roomCenters);
             roomCenters.Remove(closest);
             HashSet<Vector2Int> newCorridor = CreateCorridor(currentRoomCenter, closest);
             currentRoomCenter = closest;
@@ -103,6 +106,7 @@ public class RoomGenerator : AbstractDungeonGenerator
         HashSet<Vector2Int> corridor = new HashSet<Vector2Int>();
         var position = currentRoomCenter;
         corridor.Add(position);
+
         while (position.y != destination.y)
         {
             if (destination.y > position.y)
@@ -130,7 +134,7 @@ public class RoomGenerator : AbstractDungeonGenerator
         return corridor;
     }
 
-    private Vector2Int FindClosestPointTo(Vector2Int currentRoomCenter, List<Vector2Int> roomCenters)
+    private Vector2Int FindClosestRoomTo(Vector2Int currentRoomCenter, List<Vector2Int> roomCenters)
     {
         Vector2Int closest = Vector2Int.zero;
         float distance = float.MaxValue;
@@ -169,15 +173,13 @@ public class RoomGenerator : AbstractDungeonGenerator
 
         foreach (var room in rooms)
         {
-            // Apply offset to position and size
-            Vector3Int newMin = room.min + new Vector3Int(offset, offset, 0);  // Shift the bottom-left corner by the offset
+            Vector3Int newMin = room.min + new Vector3Int(offset, offset, 0);  
             Vector3Int newSize = new Vector3Int(
-                room.size.x - 2 * offset,   // Reduce width by twice the offset
-                room.size.y - 2 * offset,   // Reduce height by twice the offset
-                room.size.z                 // Keep the z size unchanged (assuming 2D layout)
+                room.size.x - 2 * offset,   
+                room.size.y - 2 * offset,   
+                room.size.z                 
             );
 
-            // Create new room bounds with adjusted min position and size
             BoundsInt adjustedRoom = new BoundsInt(newMin, newSize);
             offsetRooms.Add(adjustedRoom);
         }
@@ -187,18 +189,11 @@ public class RoomGenerator : AbstractDungeonGenerator
 
     private void OnDrawGizmos()
     {
-        if (CurrentRooms.Count < 0)
-            return;
-
+        // Dungeon bounds.
         Gizmos.color = Color.black;
-
         Gizmos.DrawWireCube(new Vector3(startPosition.x + (dungeonSize.x / 2), startPosition.y + (dungeonSize.y / 2), 0), new Vector3(dungeonSize.x, dungeonSize.y, 1));
 
-        foreach (Room room in CurrentRooms)
-        {
-
-        }
-
+        // Corridors visualization
         if (corridors != null && corridors.Count > 0)
         {
             Gizmos.color = Color.black;
@@ -206,11 +201,23 @@ public class RoomGenerator : AbstractDungeonGenerator
             foreach (Vector2Int corridorPosition in corridors)
             {
                 Vector3 corridorTilePosition = new Vector3(corridorPosition.x + 0.5f, corridorPosition.y + 0.5f, 0);
-
                 Gizmos.DrawWireCube(corridorTilePosition, Vector3.one);
             }
         }
     }
 
 
+
+    /* Room tiles.
+     * 1) SO that holds info for each theme
+     * Floor tiles, puddle tiles, obstacle and decoration tiles.
+     * +Could be relatively easy to implemen and expand on.
+     * -Assigning multiple tiles in correct order might become harder.
+     * 2) SO that holds info all possible tiles, categorized by theme in inspector
+     * +All tiles in one place
+     * +Possibly easier to implement tile ordering and neighbours.
+     * - Tedious to expand on
+     * - Might become cluttered
+     * - Basically the same as 1, but in one place.
+     */
 }
