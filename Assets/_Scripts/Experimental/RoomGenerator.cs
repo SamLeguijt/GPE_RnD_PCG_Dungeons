@@ -27,11 +27,6 @@ public class RoomGenerator : AbstractDungeonGenerator
 
     [SerializeField] private TilemapDrawer tilemapDrawer = null;
 
-    private void Start()
-    {
-
-    }
-
     protected override void RunProceduralGeneration()
     {
         DestroyImmediate(roomParentObject);
