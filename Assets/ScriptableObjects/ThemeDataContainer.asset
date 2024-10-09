@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd0e4e85e446a744084c3a766cdfa1db, type: 3}
   m_Name: ThemeDataContainer
   m_EditorClassIdentifier: 
+  noneThemeData: {fileID: 11400000, guid: ac6063ca7c5580345914bd9aa53a870b, type: 2}
   snowThemeData: {fileID: 11400000, guid: cd952441454b6ba4687b75e07b58dca2, type: 2}
   fireThemeData: {fileID: 11400000, guid: 6d21e43fa03acbd46a44fd053ac5f8ea, type: 2}
   grassThemeData: {fileID: 11400000, guid: 2171999fc57737943857892bb250903a, type: 2}

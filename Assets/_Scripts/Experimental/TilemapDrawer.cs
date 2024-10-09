@@ -1,16 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
 
 public class TilemapDrawer : MonoBehaviour
 {
-    [SerializeField] private Tilemap tilemap = null;
+    [SerializeField] private Tilemap roomTilemap = null;
+    [SerializeField] private Tilemap corridorsTilemap = null;
 
-    public void PaintTiles(IEnumerable<Vector2Int> positions, TileBase tile)
+    public void PaintRoomTiles(IEnumerable<Vector2Int> positions, TileBase tile)
     {
-        PaintTiles(positions, tilemap, tile);
+        PaintTiles(positions, roomTilemap, tile);
+    }
+
+    public void PaintCorridorTiles(IEnumerable<Vector2Int> positions, TileBase tile)
+    {
+        PaintTiles(positions, corridorsTilemap, tile);
     }
 
     private void PaintTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile)
@@ -29,6 +37,7 @@ public class TilemapDrawer : MonoBehaviour
 
     public void Clear()
     {
-        tilemap.ClearAllTiles();
+        corridorsTilemap.ClearAllTiles();
+        roomTilemap.ClearAllTiles();
     }
 }

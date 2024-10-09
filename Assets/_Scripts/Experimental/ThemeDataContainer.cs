@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Theme data container", fileName = "ThemeDataContainer")]
 public class ThemeDataContainer : ScriptableObject
 {
+    [SerializeField] private ThemeTileData noneThemeData;
     [SerializeField] private ThemeTileData snowThemeData;
     [SerializeField] private ThemeTileData fireThemeData;
     [SerializeField] private ThemeTileData grassThemeData;
@@ -14,7 +15,7 @@ public class ThemeDataContainer : ScriptableObject
         switch (targetTheme)
         {
             case ThemesEnum.None:
-                return null;
+                return noneThemeData;
             case ThemesEnum.Snow:
                 return snowThemeData;
             case ThemesEnum.Fire:
@@ -25,5 +26,24 @@ public class ThemeDataContainer : ScriptableObject
                 break;
         }
         return null;
+    }
+
+    public static Color GetThemeColor(ThemesEnum targetTheme)
+    {
+        switch (targetTheme)
+        {
+            case ThemesEnum.None:
+                return Color.white;
+            case ThemesEnum.Snow:
+                return Color.cyan;
+            case ThemesEnum.Fire:
+                return Color.red;
+            case ThemesEnum.Grass:
+                return Color.green;
+            default:
+                break;
+        }
+
+        return Color.black;
     }
 }
