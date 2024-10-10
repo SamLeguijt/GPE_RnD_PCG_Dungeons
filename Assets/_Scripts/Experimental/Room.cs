@@ -31,7 +31,7 @@ public class Room : MonoBehaviour
         tilemapDrawer = drawer;
         ThemeColor = ThemeDataContainer.GetThemeColor(RoomTheme);
 
-        DrawRoomTiles(GetRoomPositions(bounds) ,drawer);
+        DrawRoomTiles(GetRoomPositions(bounds), drawer);
     }
 
     public void AddPositionsToRoom(HashSet<Vector2Int> positions)
@@ -50,7 +50,7 @@ public class Room : MonoBehaviour
         {
             if (newPositions[i].x < newMinX)
                 newMinX = newPositions[i].x;
-            
+
             if (newPositions[i].x > newMaxX)
                 newMaxX = newPositions[i].x;
 
@@ -60,15 +60,18 @@ public class Room : MonoBehaviour
             if (newPositions[i].y > newMaxY)
                 newMaxY = newPositions[i].y;
         }
+        
+        newMaxX = newMaxX != roomBounds.xMax ? newMaxX +1 : roomBounds.xMax;
+        newMaxY = newMaxY != roomBounds.yMax ? newMaxY +1 : roomBounds.yMax;    
 
         BoundsInt bounds = new BoundsInt
         {
-           min = new Vector3Int(newMinX, newMinY),
-           max = new Vector3Int(newMaxX, newMaxY)
+            min = new Vector3Int(newMinX, newMinY),
+            max = new Vector3Int(newMaxX, newMaxY)
         };
 
-        roomBounds.SetMinMax(new Vector3Int(newMinX, newMinY, 1), new Vector3Int(newMaxX, newMaxY, 1));
-        DrawRoomTiles(positions ,tilemapDrawer);
+        roomBounds = bounds;
+        DrawRoomTiles(positions, tilemapDrawer);
     }
 
     private List<Vector2Int> GetRoomPositions(BoundsInt bounds)
@@ -132,6 +135,7 @@ public class Room : MonoBehaviour
                 return;
         }
 
+        // Draw bounds.
         if (roomBounds.size != Vector3Int.zero)
         {
             Gizmos.color = ThemeColor;
@@ -142,6 +146,7 @@ public class Room : MonoBehaviour
             Gizmos.DrawWireCube(roomCenter, roomSize);
         }
 
+        // Draw each room cell.
         if (RoomPositions != null && RoomPositions.Count > 0)
         {
             for (int i = 0; i < RoomPositions.Count; i++)
