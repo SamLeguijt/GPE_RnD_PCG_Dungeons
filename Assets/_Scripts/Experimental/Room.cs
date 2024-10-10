@@ -109,6 +109,9 @@ public class Room : MonoBehaviour
 
         HashSet<Vector2Int> randomPath = ProceduralGenerationAlgorithms.SimpleRandomWalk(
             new Vector2Int((int)roomBounds.center.x, (int)roomBounds.center.y), puddleParameters.walkLength);
+
+        AddPositionsToRoom(randomPath);
+
         return randomPath;
     }
 
