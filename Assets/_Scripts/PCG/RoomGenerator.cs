@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
-public class RoomGenerator : SimpleRandomWalkDungeonGenerator
+public class RoomGenerator : AbstractGenerator
 {
     public static List<Room> CurrentRooms = new List<Room>();
     public static List<ThemesEnum> RoomThemes = new List<ThemesEnum>
@@ -16,6 +17,7 @@ public class RoomGenerator : SimpleRandomWalkDungeonGenerator
     [Header("References")]
     [SerializeField] private ThemeDataContainer themeDataContainer = null;
     [SerializeField] private TilemapDrawer tilemapDrawer = null;
+    [SerializeField] private SimpleRandomWalkSO randomWalkParameters = null;
 
     [Header("Generate settings")]
     [SerializeField] private Vector2Int dungeonSize = Vector2Int.one;
@@ -23,19 +25,25 @@ public class RoomGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField] private Vector2Int roomSizeMax = Vector2Int.one;
     [SerializeField, Range(0, 15)] private int roomPosOffset = 1;
     [SerializeField] private bool useAdditionalRandomWalk = false;
-    public bool drawGizmos = false;
+
+    [field: Header("Visualization")]
+    [field: SerializeField] public bool DrawGizmos { get; private set; } = false;
 
     private HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
-    private GameObject roomParentObject = null;
+    private static GameObject roomParentObject = null;
 
+    public override void OnGenerate()
+    {
+        Clear();
+        GenerateDungeonFloor();
+    }
 
-    protected override void RunProceduralGeneration()
+    public override void OnClear()
     {
         DestroyImmediate(roomParentObject);
         CurrentRooms.Clear();
+        corridors.Clear();
         tilemapDrawer.Clear();
-
-        GenerateDungeonFloor();
     }
 
     public void GenerateDungeonFloor()
@@ -66,7 +74,7 @@ public class RoomGenerator : SimpleRandomWalkDungeonGenerator
 
     private List<BoundsInt> GenerateRoomBounds()
     {
-        var roomsBounds = ProceduralGenerationAlgorithms.BinarySpacePartitioning(new BoundsInt((Vector3Int)startPosition, new Vector3Int(dungeonSize.x, dungeonSize.y, 0)), roomSizeMin.x, roomSizeMin.y);
+        var roomsBounds = ProceduralGenerationAlgorithms.BinarySpacePartitioning(new BoundsInt((Vector3Int)StartPosition, new Vector3Int(dungeonSize.x, dungeonSize.y, 0)), roomSizeMin.x, roomSizeMin.y);
         roomsBounds = ApplyOffsetToRooms(roomsBounds, roomPosOffset);
 
         return roomsBounds;
@@ -113,6 +121,7 @@ public class RoomGenerator : SimpleRandomWalkDungeonGenerator
 
         return randomFloor;
     }
+
 
     public List<Room> CreateRooms(List<BoundsInt> roomBounds)
     {
@@ -240,12 +249,12 @@ public class RoomGenerator : SimpleRandomWalkDungeonGenerator
 
     private void OnDrawGizmosSelected()
     {
-        if (!drawGizmos)
+        if (!DrawGizmos)
             return;
 
         // Dungeon bounds.
         Gizmos.color = Color.black;
-        Gizmos.DrawWireCube(new Vector3(startPosition.x + (dungeonSize.x / 2), startPosition.y + (dungeonSize.y / 2), 0), new Vector3(dungeonSize.x, dungeonSize.y, 1));
+        Gizmos.DrawWireCube(new Vector3(StartPosition.x + (dungeonSize.x / 2), StartPosition.y + (dungeonSize.y / 2), 0), new Vector3(dungeonSize.x, dungeonSize.y, 1));
 
         // Corridors visualization
         if (corridors != null && corridors.Count > 0)

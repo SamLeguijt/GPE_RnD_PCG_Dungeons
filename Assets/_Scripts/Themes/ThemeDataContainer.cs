@@ -5,6 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Theme data container", fileName = "ThemeDataContainer")]
 public class ThemeDataContainer : ScriptableObject
 {
+    public static List<ThemesEnum> Themes = new List<ThemesEnum> { 
+        ThemesEnum.Snow,
+        ThemesEnum.Fire,
+        ThemesEnum.Grass,
+    };
+
     [SerializeField] private ThemeTileData noneThemeData;
     [SerializeField] private ThemeTileData snowThemeData;
     [SerializeField] private ThemeTileData fireThemeData;

@@ -123,7 +123,7 @@ public class Room : MonoBehaviour
             theme = desiredTheme;
         else
         {
-            int randomSelection = Random.Range(1, RoomGenerator.RoomThemes.Count + 1);
+            int randomSelection = Random.Range(1, ThemeDataContainer.Themes.Count + 1);
             theme = (ThemesEnum)randomSelection;
         }
 
@@ -134,7 +134,7 @@ public class Room : MonoBehaviour
     {
         if (roomGenerator != null)
         {
-            if (!roomGenerator.drawGizmos)
+            if (!roomGenerator.DrawGizmos)
                 return;
         }
 
