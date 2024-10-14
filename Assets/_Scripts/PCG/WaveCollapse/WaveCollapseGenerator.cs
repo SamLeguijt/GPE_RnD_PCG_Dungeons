@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEditor;
 using UnityEngine;
 using WaveCollapse;
@@ -24,6 +25,7 @@ public class WaveCollapseGenerator : AbstractGenerator
 
     private int iterations = 0;
     private static GameObject tilesParent = null;
+
 
     private void StartWaveCollapse()
     {
@@ -94,6 +96,7 @@ public class WaveCollapseGenerator : AbstractGenerator
         yield return new WaitForSeconds(delay);
 
         CollapseCell(tempGrid);
+        
     }
 
     public void CollapseCell(List<TileCell> cells)
