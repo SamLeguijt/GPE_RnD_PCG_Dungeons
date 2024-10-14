@@ -4,11 +4,26 @@ using UnityEngine;
 
 namespace WaveCollapse
 {
+    public enum TileCellType
+    {
+        Center,
+        CornerNW,
+        SideN,
+        CornerNE,
+        SideE,
+        CornerSE,
+        SideS,
+        CornerSW,
+        SideW,
+        Puddle,
+    }
+
     public class TileCell : MonoBehaviour
     {
         public bool IsCollapsed { get; set; } = false;
         
         [SerializeField] public ThemesEnum tileTheme;
+        [SerializeField] public TileCellType tileType; 
         [SerializeField] public TileData[] tileOptions;
 
         [SerializeField] public TilemapDrawer tilemapDrawer;

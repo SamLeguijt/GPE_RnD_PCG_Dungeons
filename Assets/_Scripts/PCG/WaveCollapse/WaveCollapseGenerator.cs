@@ -39,6 +39,7 @@ public class WaveCollapseGenerator : AbstractGenerator
 
     private void ExecuteWaveCollapse()
     {
+        iterations = 0;
         gridCells.Clear();
         CreateGrid();
     }

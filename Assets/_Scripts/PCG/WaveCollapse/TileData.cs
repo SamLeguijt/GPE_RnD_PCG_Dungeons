@@ -10,6 +10,7 @@ namespace WaveCollapse
     {
         public TileBase tileSprite;
         public ThemesEnum theme;
+        public TileCellType tileType;
         [Space]
         public List<TileData> northNeighbours = new List<TileData>();
         public List<TileData> eastNeighbours = new List<TileData>();

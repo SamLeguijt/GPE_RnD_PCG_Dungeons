@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileSprite: {fileID: 11400000, guid: 18c4a471c3a44c84b90b65223bda3fff, type: 2}
   theme: 1
+  tileType: 9
   northNeighbours:
   - {fileID: 11400000}
   - {fileID: 11400000, guid: 4bcb8b7e4513e9241aa975976b27ea29, type: 2}
