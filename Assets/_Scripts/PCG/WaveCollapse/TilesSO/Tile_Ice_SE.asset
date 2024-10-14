@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f639f63c72f3a0c48b488a8a650a9555, type: 3}
   m_Name: Tile_Ice_SE
   m_EditorClassIdentifier: 
-  tileSprite: {fileID: 11400000, guid: 6d8d59cc441f23d43b9ba9a380efb3e6, type: 2}
+  tileSprite: {fileID: 11400000, guid: a5b6d89609dbe0a4ba352e9155ac8311, type: 2}
   theme: 0
   northNeighbours:
   - {fileID: 11400000, guid: 3ba965cd66fe7da4c871758cea84943d, type: 2}

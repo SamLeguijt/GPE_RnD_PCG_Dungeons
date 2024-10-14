@@ -12,13 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f639f63c72f3a0c48b488a8a650a9555, type: 3}
   m_Name: Tile_Ice_NE
   m_EditorClassIdentifier: 
-  tileSprite: {fileID: 11400000, guid: 6929640808acfa948a000a01652d043a, type: 2}
+  tileSprite: {fileID: 11400000, guid: 1ea9eca4652e2e74c8ebdb8139f82837, type: 2}
   theme: 1
   northNeighbours:
-  - {fileID: 11400000, guid: 93129d7001a7c164e8d1da7b128ab165, type: 2}
-  - {fileID: 11400000, guid: 03d5f4cb7fad3a4428ff203b8ca4bd39, type: 2}
-  - {fileID: 11400000, guid: 539a4d407464fb84c932ac17fc06c25f, type: 2}
-  - {fileID: 11400000, guid: 0cdb595421412b149b50b4e1eae0027c, type: 2}
+  - {fileID: 11400000, guid: c138dcd680092514b8b6ec829643cd39, type: 2}
   eastNeighbours:
   - {fileID: 11400000, guid: 93129d7001a7c164e8d1da7b128ab165, type: 2}
   - {fileID: 11400000, guid: 03d5f4cb7fad3a4428ff203b8ca4bd39, type: 2}
