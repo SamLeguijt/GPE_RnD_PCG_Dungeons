@@ -9,9 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4784323f84408c448aa2b60f8048110e, type: 3}
-  m_Name: SimpleRandomWalkParameters_1
+  m_Script: {fileID: 11500000, guid: f639f63c72f3a0c48b488a8a650a9555, type: 3}
+  m_Name: Tile_1
   m_EditorClassIdentifier: 
-  iterations: 15
-  walkLength: 15
-  startRandomlyEachIteration: 1
+  tileSprite: {fileID: 0}
+  theme: 0
+  northNeighbours: []
+  eastNeighbours: []
+  southNeighbours: []
+  westNeighbours: []

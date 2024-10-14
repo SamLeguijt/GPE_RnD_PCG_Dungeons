@@ -8,17 +8,23 @@ using UnityEngine.WSA;
 
 public class TilemapDrawer : MonoBehaviour
 {
-    [SerializeField] private Tilemap roomTilemap = null;
-    [SerializeField] private Tilemap corridorsTilemap = null;
+    [field: SerializeField] public Tilemap RoomTilemap { get; private set; }
+    [field: SerializeField] public Tilemap CorridorsTilemap { get; private set; }
+    [field: SerializeField] public Tilemap WfcTilemap { get; private set; }
 
     public void PaintRoomTiles(IEnumerable<Vector2Int> positions, TileBase tile)
     {
-        PaintTiles(positions, roomTilemap, tile);
+        PaintTiles(positions, RoomTilemap, tile);
     }
 
     public void PaintCorridorTiles(IEnumerable<Vector2Int> positions, TileBase tile)
     {
-        PaintTiles(positions, corridorsTilemap, tile);
+        PaintTiles(positions, CorridorsTilemap, tile);
+    }
+
+    public void PaintWaveCollapseTile(Vector2Int position, TileBase tile)
+    {
+        PaintSingleTile(WfcTilemap, tile, position);
     }
 
     private void PaintTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile)
@@ -34,10 +40,9 @@ public class TilemapDrawer : MonoBehaviour
         var tilePosition = tilemap.WorldToCell((Vector3Int)position);
         tilemap.SetTile(tilePosition, tile);
     }
-
-    public void Clear()
+    
+    public void Clear(Tilemap mapToClear)
     {
-        corridorsTilemap.ClearAllTiles();
-        roomTilemap.ClearAllTiles();
+        mapToClear.ClearAllTiles();
     }
 }

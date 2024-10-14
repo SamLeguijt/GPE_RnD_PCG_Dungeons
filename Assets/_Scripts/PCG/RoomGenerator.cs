@@ -43,7 +43,8 @@ public class RoomGenerator : AbstractGenerator
         DestroyImmediate(roomParentObject);
         CurrentRooms.Clear();
         corridors.Clear();
-        tilemapDrawer.Clear();
+        tilemapDrawer.Clear(tilemapDrawer.RoomTilemap);
+        tilemapDrawer.Clear(tilemapDrawer.CorridorsTilemap);
     }
 
     public void GenerateDungeonFloor()
