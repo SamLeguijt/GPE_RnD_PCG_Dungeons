@@ -6,20 +6,24 @@ namespace WaveCollapse
 {
     public class TileCell : MonoBehaviour
     {
-        public bool IsCollapsed {  get; private set; }
+        public bool IsCollapsed { get; set; } = false;
         
-        [SerializeField] private TileData tileData;
-        [SerializeField] private ThemesEnum tileTheme;
-        [SerializeField] private TileData[] currentNeighbours;
+        [SerializeField] public ThemesEnum tileTheme;
+        [SerializeField] public TileData[] tileOptions;
 
-        [SerializeField] private TilemapDrawer tilemapDrawer;
-        [SerializeField] private Vector2Int Position;
+        [SerializeField] public TilemapDrawer tilemapDrawer;
+        [SerializeField] public Vector2Int Position;
         
         public void Create(TileData[] possibleTiles, bool isCollapsed, ThemesEnum theme)
         {
             tileTheme = theme;
-            currentNeighbours = possibleTiles;
+            tileOptions = possibleTiles;
             IsCollapsed = isCollapsed;
+        }
+
+        public void Recreate(TileData[] tiles) 
+        {
+            tileOptions = tiles;
         }
 
         public TileCell GetNeighbour(Vector2Int direction)
@@ -34,8 +38,9 @@ namespace WaveCollapse
 
         public void Collapse(TileData tileVisuals)
         {
-            tileData = tileVisuals;
-            tilemapDrawer.PaintWaveCollapseTile(Position, tileData.tileSprite);
+            //tileData = tileVisuals;
+            //tilemapDrawer.PaintWaveCollapseTile(Position, tileData.tileSprite);
+            //IsCollapsed = true;
         }
     }
 }
