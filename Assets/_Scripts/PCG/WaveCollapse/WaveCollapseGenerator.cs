@@ -13,7 +13,7 @@ public class WaveCollapseGenerator : AbstractGenerator
     [Header("References")]
     [SerializeField] private GameObject tileCellObject = null;
     [SerializeField] private TilemapDrawer tilemapDrawer;
-    [SerializeField] private TileData[] snowTiles;
+    [SerializeField] private TileData[] allPossibleTiles;
 
     [Header("Generate settings")]
     [SerializeField] private Vector2Int gridDimensions = Vector2Int.one;
@@ -25,6 +25,10 @@ public class WaveCollapseGenerator : AbstractGenerator
 
     private int iterations = 0;
     private static GameObject tilesParent = null;
+
+    List<Vector2Int> toCollapseList = new List<Vector2Int>();
+
+    TileData[,] tileGrid;
 
 
     private void StartWaveCollapse()
@@ -62,12 +66,14 @@ public class WaveCollapseGenerator : AbstractGenerator
             for (int x = 0; x < gridDimensions.x; x++)
             {
                 TileCell tileCell = Instantiate(tileCellObject, new Vector2(x, y), Quaternion.identity, parent).GetComponent<TileCell>();
-                tileCell.Create(snowTiles, false, ThemesEnum.Snow);
+                tileCell.Create(allPossibleTiles, false, ThemesEnum.Snow);
                 gridCells.Add(tileCell);
             }
         }
 
         StartCoroutine(CheckEntropy());
+
+        tileGrid = new TileData[gridDimensions.x, gridDimensions.y];
     }
 
     private IEnumerator CheckEntropy()
@@ -97,7 +103,7 @@ public class WaveCollapseGenerator : AbstractGenerator
         yield return new WaitForSeconds(delay);
 
         CollapseCell(tempGrid);
-        
+
     }
 
     public void CollapseCell(List<TileCell> cells)
@@ -116,6 +122,71 @@ public class WaveCollapseGenerator : AbstractGenerator
         UpdateGeneration();
 
     }
+
+    private void CollapseWorld()
+    {
+        toCollapseList.Clear();
+
+        toCollapseList.Add(new Vector2Int(gridDimensions.x / 2, gridDimensions.y / 2));
+
+        while (toCollapseList.Count > 0)
+        {
+            int x = toCollapseList[0].x;    
+            int y = toCollapseList[0].y;
+
+            List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
+
+            for (int i = 0; i < Direction2D.cardinalDirectionsList.Count; i++)
+            {
+                Vector2Int direction = Direction2D.cardinalDirectionsList[i];
+                Vector2Int neighbour = new Vector2Int(x + direction.x, y + direction.y);
+
+                // TODO: Check if neighbour is inside grid here...
+                
+                TileData neighbourTileData = tileGrid[neighbour.x, neighbour.y];
+
+                if (neighbourTileData != null)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            CheckValidity(possibleTiles, neighbourTileData.southNeighbours);
+                            break;
+                        case 1:
+                            CheckValidity(possibleTiles, neighbourTileData.westNeighbours);
+                            break;
+                        case 2:
+                            CheckValidity(possibleTiles, neighbourTileData.northNeighbours);
+                            break;
+                        case 3:
+                            CheckValidity(possibleTiles, neighbourTileData.eastNeighbours);
+                            break;
+                    }
+                }
+                else
+                {
+                    if (!toCollapseList.Contains(neighbour))
+                        toCollapseList.Add(neighbour);
+                }
+            }
+
+            if (possibleTiles.Count < 1)
+            {
+                tileGrid[x, y] = allPossibleTiles[0];
+                Debug.Log("No potential tiles for :" + x + y);
+            }
+            else
+            {
+                TileData tile = possibleTiles[Random.Range(0, possibleTiles.Count)];
+                tileGrid[x, y] = tile;
+                //Vector2Int pos = tile;
+            }
+
+            //tilemapDrawer.PaintWaveCollapseTile(new Vector2Int((int)toCollapse.transform.position.x, (int)toCollapse.transform.position.y), foundTile.tileSprite);
+
+        }
+    }
+
 
     private void UpdateGeneration()
     {
@@ -136,7 +207,7 @@ public class WaveCollapseGenerator : AbstractGenerator
                 {
                     List<TileData> options = new List<TileData>();
 
-                    foreach (TileData tile in snowTiles)
+                    foreach (TileData tile in allPossibleTiles)
                     {
                         options.Add(tile);
                     }
@@ -150,8 +221,8 @@ public class WaveCollapseGenerator : AbstractGenerator
 
                         foreach (TileData possibleOptions in up.tileOptions)
                         {
-                            var validOption = Array.FindIndex(snowTiles, obj => obj == possibleOptions);
-                            var valid = snowTiles[validOption].northNeighbours;
+                            var validOption = Array.FindIndex(allPossibleTiles, obj => obj == possibleOptions);
+                            var valid = allPossibleTiles[validOption].northNeighbours;
 
                             validOptions = validOptions.Concat(valid).ToList();
                         }
@@ -167,8 +238,8 @@ public class WaveCollapseGenerator : AbstractGenerator
 
                         foreach (TileData possibleOptions in right.tileOptions)
                         {
-                            var validOption = Array.FindIndex(snowTiles, obj => obj == possibleOptions);
-                            var valid = snowTiles[validOption].westNeighbours;
+                            var validOption = Array.FindIndex(allPossibleTiles, obj => obj == possibleOptions);
+                            var valid = allPossibleTiles[validOption].westNeighbours;
 
                             validOptions = validOptions.Concat(valid).ToList();
                         }
@@ -183,8 +254,8 @@ public class WaveCollapseGenerator : AbstractGenerator
 
                         foreach (TileData possibleOptions in down.tileOptions)
                         {
-                            var validOption = Array.FindIndex(snowTiles, obj => obj == possibleOptions);
-                            var valid = snowTiles[validOption].southNeighbours;
+                            var validOption = Array.FindIndex(allPossibleTiles, obj => obj == possibleOptions);
+                            var valid = allPossibleTiles[validOption].southNeighbours;
 
                             validOptions = validOptions.Concat(valid).ToList();
                         }
@@ -199,8 +270,8 @@ public class WaveCollapseGenerator : AbstractGenerator
 
                         foreach (TileData possibleOptions in left.tileOptions)
                         {
-                            var validOption = Array.FindIndex(snowTiles, obj => obj == possibleOptions);
-                            var valid = snowTiles[validOption].eastNeighbours;
+                            var validOption = Array.FindIndex(allPossibleTiles, obj => obj == possibleOptions);
+                            var valid = allPossibleTiles[validOption].eastNeighbours;
 
                             validOptions = validOptions.Concat(valid).ToList();
                         }
