@@ -25,7 +25,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c8cde35589e872544b51a03009eea624, type: 2}
   southNeighbours:
   - {fileID: 11400000, guid: 7887e12e5bbe70e4d8076f532772617b, type: 2}
-  - {fileID: 11400000, guid: 0b722d6815bfdcf4f8566abfd0f38e3b, type: 2}
   westNeighbours:
   - {fileID: 11400000}
   - {fileID: 11400000, guid: 1f7e521f04a67d84ab1a1bf60fcf537c, type: 2}

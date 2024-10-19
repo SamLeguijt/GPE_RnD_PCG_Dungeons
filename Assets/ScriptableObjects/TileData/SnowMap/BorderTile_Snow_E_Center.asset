@@ -28,4 +28,3 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 426d9d5aad46249499c080a18e7eb702, type: 2}
   westNeighbours:
   - {fileID: 11400000, guid: 7887e12e5bbe70e4d8076f532772617b, type: 2}
-  - {fileID: 11400000, guid: 4e21d19be203a0845a15b7921c879d98, type: 2}
