@@ -321,8 +321,6 @@ public class WaveCollapseGenerator : AbstractGenerator
 
     private IEnumerator RunWaveCollapseUntilComplete()
     {
-        WaitForSeconds delay = new WaitForSeconds(0.25f);
-
         int max = 10000000;
         int current = 0;
 
