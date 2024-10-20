@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7cf8b55bb5f9966499e33adf0d978072
+guid: a79f0e574b7f6724fb988267ed911256
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_0
+      name: RPG-Tileset - Snow 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 39a854a566954bd4fb0aeb8b72968528
-      internalID: 697670365
+      spriteID: 21f795bb65f70ce45aea2e39c742f74f
+      internalID: -273640983
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_1
+      name: RPG-Tileset - Snow 1_1
       rect:
         serializedVersion: 2
         x: 16
@@ -145,14 +145,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c8ecbd70fb713644d879ed2e40dfc178
-      internalID: 2117305542
+      spriteID: 25be38e3e5b0e8348ad7cd8b5d16d1c3
+      internalID: 43772681
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_2
+      name: RPG-Tileset - Snow 1_2
       rect:
         serializedVersion: 2
         x: 32
@@ -166,14 +166,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 62054d17f0c351d4fb2a4286e17bff04
-      internalID: -868900812
+      spriteID: 531c189fe88f21a4e8f7fa1e74f8bc82
+      internalID: -1523081634
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_3
+      name: RPG-Tileset - Snow 1_3
       rect:
         serializedVersion: 2
         x: 48
@@ -187,14 +187,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 79318b4c7a3137a439df1704c0e9ae68
-      internalID: 1188249039
+      spriteID: 41d9d7d16790b364897765a479a41668
+      internalID: 228031421
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_4
+      name: RPG-Tileset - Snow 1_4
       rect:
         serializedVersion: 2
         x: 0
@@ -208,14 +208,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 78113e899cdb9c941beebfae629d096b
-      internalID: -766621767
+      spriteID: 745df8fb627711440a548bbd5394fd3e
+      internalID: 627045968
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_5
+      name: RPG-Tileset - Snow 1_5
       rect:
         serializedVersion: 2
         x: 16
@@ -229,14 +229,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e8b1ed532fd1b244997200099d7191b9
-      internalID: -195621680
+      spriteID: 3184a8fc6f9a29743990740ccbe1254c
+      internalID: 303186106
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_6
+      name: RPG-Tileset - Snow 1_6
       rect:
         serializedVersion: 2
         x: 32
@@ -250,14 +250,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f9b18df784811fa46aed238f02619fe2
-      internalID: 1009501253
+      spriteID: 7647bf56742563a4f9c7a8d1b2528a0a
+      internalID: -1365346660
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_7
+      name: RPG-Tileset - Snow 1_7
       rect:
         serializedVersion: 2
         x: 48
@@ -271,14 +271,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 49690044b7463304e9b58e485469aa0e
-      internalID: -662995252
+      spriteID: 35633bddd7eeb224b986fe5408e589e2
+      internalID: -1502698747
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_8
+      name: RPG-Tileset - Snow 1_8
       rect:
         serializedVersion: 2
         x: 0
@@ -292,14 +292,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aafec50c2ebf1cb4682f911ff07da0e1
-      internalID: 2017176065
+      spriteID: 0a27f3152d4f6474ead0a4b50e107cdb
+      internalID: -190957452
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_9
+      name: RPG-Tileset - Snow 1_9
       rect:
         serializedVersion: 2
         x: 16
@@ -313,14 +313,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3d54097afa37ebc4987eacdb42698c63
-      internalID: -1498520871
+      spriteID: bbc432373545ede4793abc03a0b783f8
+      internalID: -434326107
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_10
+      name: RPG-Tileset - Snow 1_10
       rect:
         serializedVersion: 2
         x: 32
@@ -334,14 +334,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a8058136013560446bc92e13c1b0fa20
-      internalID: 613651888
+      spriteID: 8c5fa2c60420e5043a911e6fdb76dfc7
+      internalID: -1515967278
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_11
+      name: RPG-Tileset - Snow 1_11
       rect:
         serializedVersion: 2
         x: 48
@@ -355,14 +355,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 26a444414faca5f4691d66a9b218150b
-      internalID: 1122265995
+      spriteID: 82d6e47f7bc7b0c45ae4618238755c1b
+      internalID: 1848470045
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_12
+      name: RPG-Tileset - Snow 1_12
       rect:
         serializedVersion: 2
         x: 0
@@ -376,14 +376,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0075548d9224ade49b8ea8501cc71913
-      internalID: 1564847357
+      spriteID: e509454dedbb8c2408fe3bba2b99a5ca
+      internalID: -1813771030
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_13
+      name: RPG-Tileset - Snow 1_13
       rect:
         serializedVersion: 2
         x: 16
@@ -397,14 +397,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 21cc730ea45eb8e4eb42e66f46ffa31a
-      internalID: -219120542
+      spriteID: fa37c5d3c808f384387ebdb478e4fce3
+      internalID: -1285389785
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_14
+      name: RPG-Tileset - Snow 1_14
       rect:
         serializedVersion: 2
         x: 32
@@ -418,14 +418,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dd925d22403bbd6499db29e9b5b444bd
-      internalID: -588042789
+      spriteID: 1857b8fcc53fc7a4a8b8da278971ead0
+      internalID: -825634765
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_15
+      name: RPG-Tileset - Snow 1_15
       rect:
         serializedVersion: 2
         x: 48
@@ -439,14 +439,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 06ec1e969b1cc614ab01f0ae97b372d2
-      internalID: 812279370
+      spriteID: 7287ec9fd645caa4a9ccb4c74ca92070
+      internalID: -1955694480
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_16
+      name: RPG-Tileset - Snow 1_16
       rect:
         serializedVersion: 2
         x: 0
@@ -460,14 +460,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bda20c82358348040b3bb338bd8cdb25
-      internalID: -733920473
+      spriteID: 702d7ba3512cda74699d3f3d2b2a6541
+      internalID: -1471525422
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_17
+      name: RPG-Tileset - Snow 1_17
       rect:
         serializedVersion: 2
         x: 16
@@ -481,14 +481,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 40a2e393bc96ff141bc2d213cff40a26
-      internalID: 1315725094
+      spriteID: 404b849e7a7edca4d908040eeac9f483
+      internalID: -1185866548
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_18
+      name: RPG-Tileset - Snow 1_18
       rect:
         serializedVersion: 2
         x: 32
@@ -502,14 +502,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 434e9c62fb32e22468ddb3a990b7de08
-      internalID: 1553937420
+      spriteID: dc9ab98840f85cf41bbcba0fcc60ad33
+      internalID: -1486988524
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_19
+      name: RPG-Tileset - Snow 1_19
       rect:
         serializedVersion: 2
         x: 48
@@ -523,14 +523,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 434c70070a6d13a49a56e03d69a431ef
-      internalID: -1625239825
+      spriteID: 11371fe15d5954449932142f14a7a28b
+      internalID: -1043936644
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_20
+      name: RPG-Tileset - Snow 1_20
       rect:
         serializedVersion: 2
         x: 32
@@ -544,14 +544,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 46bf2c586a4e464438c0217e308b31c9
-      internalID: -1668470154
+      spriteID: a8a3f535afaedb74599d7a615f9ba307
+      internalID: 1329046236
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RPG-Tileset - Snow_21
+      name: RPG-Tileset - Snow 1_21
       rect:
         serializedVersion: 2
         x: 48
@@ -565,8 +565,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4425951e15dba794e877faa9eddb2052
-      internalID: -937511043
+      spriteID: c93abd2988cf1604d8f802999e4880fd
+      internalID: -1262032468
       vertices: []
       indices: 
       edges: []
@@ -582,28 +582,28 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      RPG-Tileset - Snow_0: 697670365
-      RPG-Tileset - Snow_1: 2117305542
-      RPG-Tileset - Snow_10: 613651888
-      RPG-Tileset - Snow_11: 1122265995
-      RPG-Tileset - Snow_12: 1564847357
-      RPG-Tileset - Snow_13: -219120542
-      RPG-Tileset - Snow_14: -588042789
-      RPG-Tileset - Snow_15: 812279370
-      RPG-Tileset - Snow_16: -733920473
-      RPG-Tileset - Snow_17: 1315725094
-      RPG-Tileset - Snow_18: 1553937420
-      RPG-Tileset - Snow_19: -1625239825
-      RPG-Tileset - Snow_2: -868900812
-      RPG-Tileset - Snow_20: -1668470154
-      RPG-Tileset - Snow_21: -937511043
-      RPG-Tileset - Snow_3: 1188249039
-      RPG-Tileset - Snow_4: -766621767
-      RPG-Tileset - Snow_5: -195621680
-      RPG-Tileset - Snow_6: 1009501253
-      RPG-Tileset - Snow_7: -662995252
-      RPG-Tileset - Snow_8: 2017176065
-      RPG-Tileset - Snow_9: -1498520871
+      RPG-Tileset - Snow 1_0: -273640983
+      RPG-Tileset - Snow 1_1: 43772681
+      RPG-Tileset - Snow 1_10: -1515967278
+      RPG-Tileset - Snow 1_11: 1848470045
+      RPG-Tileset - Snow 1_12: -1813771030
+      RPG-Tileset - Snow 1_13: -1285389785
+      RPG-Tileset - Snow 1_14: -825634765
+      RPG-Tileset - Snow 1_15: -1955694480
+      RPG-Tileset - Snow 1_16: -1471525422
+      RPG-Tileset - Snow 1_17: -1185866548
+      RPG-Tileset - Snow 1_18: -1486988524
+      RPG-Tileset - Snow 1_19: -1043936644
+      RPG-Tileset - Snow 1_2: -1523081634
+      RPG-Tileset - Snow 1_20: 1329046236
+      RPG-Tileset - Snow 1_21: -1262032468
+      RPG-Tileset - Snow 1_3: 228031421
+      RPG-Tileset - Snow 1_4: 627045968
+      RPG-Tileset - Snow 1_5: 303186106
+      RPG-Tileset - Snow 1_6: -1365346660
+      RPG-Tileset - Snow 1_7: -1502698747
+      RPG-Tileset - Snow 1_8: -190957452
+      RPG-Tileset - Snow 1_9: -434326107
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

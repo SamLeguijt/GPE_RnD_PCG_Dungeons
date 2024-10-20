@@ -77,9 +77,9 @@ public class WaveCollapseGenerator : AbstractGenerator
         tileGrid = new TileData[gridDimensions.x, gridDimensions.y];
 
         //CollapseWorld();
-        //StartCoroutine(RunWaveCollapseUntilComplete());
+        StartCoroutine(RunWaveCollapseUntilComplete());
 
-        CollapseWorldRecursive();
+        //CollapseWorldRecursive();
     }
 
     private IEnumerator CheckEntropy()
