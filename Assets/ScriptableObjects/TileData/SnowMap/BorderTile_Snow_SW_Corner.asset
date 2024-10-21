@@ -17,8 +17,10 @@ MonoBehaviour:
   tileType: 7
   northNeighbours:
   - {fileID: 11400000, guid: 4e21d19be203a0845a15b7921c879d98, type: 2}
+  - {fileID: 11400000, guid: 619f0dfa984c55846ae4054a15dea323, type: 2}
   eastNeighbours:
   - {fileID: 11400000, guid: 0b722d6815bfdcf4f8566abfd0f38e3b, type: 2}
+  - {fileID: 11400000, guid: 619f0dfa984c55846ae4054a15dea323, type: 2}
   southNeighbours:
   - {fileID: 11400000, guid: 4bcb8b7e4513e9241aa975976b27ea29, type: 2}
   - {fileID: 11400000, guid: c8cde35589e872544b51a03009eea624, type: 2}

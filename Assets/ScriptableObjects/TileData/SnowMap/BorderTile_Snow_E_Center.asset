@@ -18,6 +18,7 @@ MonoBehaviour:
   northNeighbours:
   - {fileID: 11400000}
   - {fileID: 11400000, guid: c8cde35589e872544b51a03009eea624, type: 2}
+  - {fileID: 11400000, guid: d29664bb4b3a86543a17a1f5083914b6, type: 2}
   eastNeighbours:
   - {fileID: 11400000, guid: 90efa8b58639bc54d92b43f9f00a854f, type: 2}
   - {fileID: 11400000, guid: 4e21d19be203a0845a15b7921c879d98, type: 2}
@@ -26,5 +27,8 @@ MonoBehaviour:
   southNeighbours:
   - {fileID: 11400000}
   - {fileID: 11400000, guid: 426d9d5aad46249499c080a18e7eb702, type: 2}
+  - {fileID: 11400000, guid: 8957602fbd6238b4da194be4df6ce0fb, type: 2}
   westNeighbours:
   - {fileID: 11400000, guid: 7887e12e5bbe70e4d8076f532772617b, type: 2}
+  - {fileID: 11400000, guid: 619f0dfa984c55846ae4054a15dea323, type: 2}
+  - {fileID: 11400000, guid: 645ed7ff1750fdb4b984b852de755e8e, type: 2}

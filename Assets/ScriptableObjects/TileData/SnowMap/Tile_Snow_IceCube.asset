@@ -18,12 +18,20 @@ MonoBehaviour:
   northNeighbours:
   - {fileID: 11400000}
   - {fileID: 11400000, guid: 4bcb8b7e4513e9241aa975976b27ea29, type: 2}
+  - {fileID: 11400000, guid: 645ed7ff1750fdb4b984b852de755e8e, type: 2}
+  - {fileID: 11400000, guid: 8957602fbd6238b4da194be4df6ce0fb, type: 2}
   eastNeighbours:
   - {fileID: 11400000}
   - {fileID: 11400000, guid: e8f096165f08cfb4c8129577639091dc, type: 2}
+  - {fileID: 11400000, guid: 8957602fbd6238b4da194be4df6ce0fb, type: 2}
+  - {fileID: 11400000, guid: d29664bb4b3a86543a17a1f5083914b6, type: 2}
   southNeighbours:
   - {fileID: 11400000}
   - {fileID: 11400000, guid: 0b722d6815bfdcf4f8566abfd0f38e3b, type: 2}
+  - {fileID: 11400000, guid: 619f0dfa984c55846ae4054a15dea323, type: 2}
+  - {fileID: 11400000, guid: d29664bb4b3a86543a17a1f5083914b6, type: 2}
   westNeighbours:
   - {fileID: 11400000}
   - {fileID: 11400000, guid: 4e21d19be203a0845a15b7921c879d98, type: 2}
+  - {fileID: 11400000, guid: 645ed7ff1750fdb4b984b852de755e8e, type: 2}
+  - {fileID: 11400000, guid: 619f0dfa984c55846ae4054a15dea323, type: 2}
