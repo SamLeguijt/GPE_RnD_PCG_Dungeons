@@ -23,9 +23,11 @@ MonoBehaviour:
   eastNeighbours:
   - {fileID: 11400000, guid: 4bcb8b7e4513e9241aa975976b27ea29, type: 2}
   - {fileID: 11400000, guid: 645ed7ff1750fdb4b984b852de755e8e, type: 2}
+  - {fileID: 11400000, guid: c8cde35589e872544b51a03009eea624, type: 2}
   southNeighbours:
   - {fileID: 11400000, guid: 4e21d19be203a0845a15b7921c879d98, type: 2}
   - {fileID: 11400000, guid: 645ed7ff1750fdb4b984b852de755e8e, type: 2}
+  - {fileID: 11400000, guid: 174c6d83e0a63384b973946ad9e0faef, type: 2}
   westNeighbours:
   - {fileID: 11400000, guid: c8cde35589e872544b51a03009eea624, type: 2}
   - {fileID: 11400000, guid: 426d9d5aad46249499c080a18e7eb702, type: 2}

@@ -83,7 +83,9 @@ public class WaveCollapseGenerator : AbstractGenerator
 
         foreach (Vector2Int position in room.RoomPositions)
         {
-            
+            // Add all positions to the grid. 
+
+            // 
         }
     }
 
@@ -91,11 +93,12 @@ public class WaveCollapseGenerator : AbstractGenerator
     {
         int max = 10000000;
         int current = 0;
+        List<Vector2Int> toCollapse = new();
 
         while (HasEmptyTiles() || current < max)
         {
             current++;
-            CollapseWave();
+            CollapseWave(toCollapse);
 
             if (!HasEmptyTiles())
                 break;
@@ -116,13 +119,13 @@ public class WaveCollapseGenerator : AbstractGenerator
         return false;
     }
 
-    private void CollapseWave()
+    private void CollapseWave(List<Vector2Int> toCollapse)
     {
-        if (toCollapseList.Count == 0)
-            toCollapseList.Add(new Vector2Int(gridDimensions.x / 2, gridDimensions.y / 2));
+        if (toCollapse.Count == 0)
+            toCollapse.Add(new Vector2Int(gridDimensions.x / 2, gridDimensions.y / 2));
 
-        int x = toCollapseList[0].x;
-        int y = toCollapseList[0].y;
+        int x = toCollapse[0].x;
+        int y = toCollapse[0].y;
 
         List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
 
@@ -138,6 +141,8 @@ public class WaveCollapseGenerator : AbstractGenerator
 
             if (neighbourTileData != null)
             {
+                Debug.Log("Neighbourtiledata not null");
+
                 switch (i)
                 {
                     case 0: // North
@@ -156,8 +161,8 @@ public class WaveCollapseGenerator : AbstractGenerator
             }
             else
             {
-                if (!toCollapseList.Contains(neighbour))
-                    toCollapseList.Add(neighbour);
+                if (!toCollapse.Contains(neighbour))
+                    toCollapse.Add(neighbour);
             }
         }
 
@@ -173,7 +178,7 @@ public class WaveCollapseGenerator : AbstractGenerator
             tilemapDrawer.PaintWaveCollapseTile(new Vector2Int(x, y), tile.tileSprite);
         }
 
-        toCollapseList.RemoveAt(0);
+        toCollapse.RemoveAt(0);
     }
 
     private List<TileData> FilterPossibleTiles(List<TileData> possibleTiles, List<TileData> validOptions)
@@ -243,18 +248,18 @@ public class WaveCollapseGenerator : AbstractGenerator
 
             if (possibleTiles.Count < 1)
             {
-                tileGrid[x, y] = allPossibleTiles[0];
-                tile = tileGrid[x, y];
+                //tileGrid[x, y] = allPossibleTiles[0];
+                //tile = tileGrid[x, y];
                 Debug.Log("No potential tiles for :" + x + y);
             }
             else
             {
                 tile = possibleTiles[Random.Range(0, possibleTiles.Count)];
                 tileGrid[x, y] = tile;
+                tilemapDrawer.PaintWaveCollapseTile(new Vector2Int(x, y), tile.tileSprite);
+                toCollapseList.RemoveAt(0);
             }
 
-            tilemapDrawer.PaintWaveCollapseTile(new Vector2Int(x, y), tile.tileSprite);
-            toCollapseList.RemoveAt(0);
         }
     }
 
