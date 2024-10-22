@@ -19,6 +19,7 @@ public class Room : MonoBehaviour
     private ThemeTileData themeTileData;
     private TilemapDrawer tilemapDrawer;
     private RoomGenerator roomGenerator;
+    private WaveCollapseGenerator waveCollapseGenerator;
 
     public void SetupRoom(RoomGenerator generator, BoundsInt bounds, TilemapDrawer drawer, ThemeDataContainer themeDataContainer, ThemesEnum theme = ThemesEnum.None)
     {
@@ -93,14 +94,18 @@ public class Room : MonoBehaviour
 
     public void DrawRoomTiles(IEnumerable<Vector2Int> positions, TilemapDrawer drawer)
     {
-        drawer.PaintRoomTiles(positions, themeTileData.FloorTile);
+        //drawer.PaintRoomTiles(positions, themeTileData.FloorTile);
 
         float randomNumber = Random.Range(0f, 1f);
         if (randomNumber < 0.5f)
         {
             var puddle = CreatePuddle();
-            drawer.PaintRoomTiles(puddle, themeTileData.PuddleTile);
+            //drawer.PaintRoomTiles(puddle, themeTileData.PuddleTile);
         }
+
+        /* WFC Implementation */
+
+        WaveCollapseGenerator.Instance.CollapseRoom(this);
     }
 
     private HashSet<Vector2Int> CreatePuddle()
