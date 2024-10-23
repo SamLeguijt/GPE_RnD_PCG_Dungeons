@@ -94,8 +94,10 @@ public class WaveCollapseGenerator : AbstractGenerator
 
         List<Vector2Int> cellsToCollapse = new List<Vector2Int>(room.RoomPositions);
 
-        //ExecuteWaveFunctionCollapseAlgorithm(cellsToCollapse);
-        StartCoroutine(ExecuteWaveCollapseAlgorithmEntropied(cellsToCollapse));
+        ExecuteWaveFunctionCollapseAlgorithm(cellsToCollapse);
+
+        // Note: Use this to incorporate entropy in the algorithm.
+        //StartCoroutine(ExecuteWaveCollapseAlgorithmEntropied(cellsToCollapse));
 
     }
 
@@ -126,7 +128,7 @@ public class WaveCollapseGenerator : AbstractGenerator
 
                 // Get the TileData of the neighbour to filter possible tiles.
                 if (!positionsTilesDict.TryGetValue(neighbour, out TileData neighbourTileData))
-                    continue; 
+                    continue;
 
                 // Filter possible tiles based on the current direction and their allowed nighbours on the opposite direction.
                 switch (i)
@@ -168,10 +170,20 @@ public class WaveCollapseGenerator : AbstractGenerator
         }
     }
 
+    /// <summary>
+    /// Executes the WFC algorithm and paint tiles using entropy in the calculations.
+    /// Note: Less good results than using witout entropy.
+    /// </summary>
+    /// <param name="cellsToCollapse"></param>
+    /// <returns></returns>
     public IEnumerator ExecuteWaveCollapseAlgorithmEntropied(List<Vector2Int> cellsToCollapse)
     {
         WaitForSeconds delay = new WaitForSeconds(this.delay);
         Dictionary<Vector2Int, int> entropyDict = new();
+        Dictionary<Vector2Int, TileData> tileDataDict = new();
+
+        int current = 0;
+        int max = 1000;
 
         // Initialize entropy for each cell based on all possible tiles.
         foreach (Vector2Int cellPosition in cellsToCollapse)
@@ -180,8 +192,10 @@ public class WaveCollapseGenerator : AbstractGenerator
         }
 
         // Run until all cells are collapsed
-        while (cellsToCollapse.Count > 0)
+        while (cellsToCollapse.Count > 0 && current < max)
         {
+            current++;
+            Debug.Log(current);
             // Select the cell with the lowest entropy
             Vector2Int cellToCollapse = GetCellWithLowestEntropy(cellsToCollapse, entropyDict);
 
@@ -195,7 +209,7 @@ public class WaveCollapseGenerator : AbstractGenerator
                 Vector2Int currentDirection = Direction2D.cardinalDirectionsList[i];
                 Vector2Int neighbour = new Vector2Int(x + currentDirection.x, y + currentDirection.y);
 
-                if (!positionsTilesDict.TryGetValue(neighbour, out TileData neighbourTileData))
+                if (!tileDataDict.TryGetValue(neighbour, out TileData neighbourTileData))
                     continue;
 
                 switch (i)
@@ -218,20 +232,22 @@ public class WaveCollapseGenerator : AbstractGenerator
             if (possibleTiles.Count > 0)
             {
                 TileData tileData = possibleTiles[Random.Range(0, possibleTiles.Count)];
-                positionsTilesDict.Add(cellToCollapse, tileData);
+                tileDataDict.Add(cellToCollapse, tileData);
                 cellsToCollapse.Remove(cellToCollapse);
 
                 // Update entropy for neighbors based on this new assignment
-                UpdateNeighborEntropy(cellToCollapse, entropyDict);
+                UpdateNeighborEntropy(cellToCollapse, entropyDict, tileDataDict);
             }
             else
             {
                 Debug.LogWarning("No possible tile for tile at position: " + cellToCollapse);
             }
+
+            if (cellsToCollapse.Count <= 0)
+                break;
         }
 
-        // Final painting of all tiles after the algorithm finishes.
-        foreach (KeyValuePair<Vector2Int, TileData> kvp in positionsTilesDict)
+        foreach (KeyValuePair<Vector2Int, TileData> kvp in tileDataDict)
         {
 
             Vector2Int position = kvp.Key;
@@ -249,7 +265,7 @@ public class WaveCollapseGenerator : AbstractGenerator
         return cellsToCollapse.OrderBy(c => entropyDict[c]).First();
     }
 
-    private void UpdateNeighborEntropy(Vector2Int cell, Dictionary<Vector2Int, int> entropyDict)
+    private void UpdateNeighborEntropy(Vector2Int cell, Dictionary<Vector2Int, int> entropyDict, Dictionary<Vector2Int, TileData> tileDataDict)
     {
         // Logic to adjust entropy for neighboring cells based on the new assignment
         foreach (Vector2Int dir in Direction2D.cardinalDirectionsList)
@@ -259,8 +275,42 @@ public class WaveCollapseGenerator : AbstractGenerator
             if (entropyDict.ContainsKey(neighbour))
             {
                 // Recalculate possible tiles and adjust entropy
-                int newEntropy = CalculateEntropyFor(neighbour);
+                int newEntropy = CalculateEntropyFor(neighbour, tileDataDict);
                 entropyDict[neighbour] = newEntropy;
+            }
+        }
+
+
+        Queue<Vector2Int> cellsToUpdate = new Queue<Vector2Int>();
+        cellsToUpdate.Enqueue(cell);
+
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>(); // To prevent re-processing cells
+
+        while (cellsToUpdate.Count > 0)
+        {
+            Vector2Int currentCell = cellsToUpdate.Dequeue();
+
+            // Only update if it hasn't been visited yet
+            if (visited.Contains(currentCell))
+                continue;
+
+            visited.Add(currentCell);
+
+            // Update the entropy for the current neighbor
+            if (entropyDict.ContainsKey(currentCell))
+            {
+                int newEntropy = CalculateEntropyFor(currentCell, tileDataDict);
+                entropyDict[currentCell] = newEntropy;
+            }
+
+            // Enqueue neighbors for updating
+            foreach (Vector2Int dir in Direction2D.cardinalDirectionsList)
+            {
+                Vector2Int neighbor = new Vector2Int(currentCell.x + dir.x, currentCell.y + dir.y);
+                if (entropyDict.ContainsKey(neighbor) && !visited.Contains(neighbor))
+                {
+                    cellsToUpdate.Enqueue(neighbor);
+                }
             }
         }
     }
@@ -317,5 +367,5 @@ public class WaveCollapseGenerator : AbstractGenerator
         return possibleTiles;
     }
 
-   
+
 }

@@ -107,7 +107,7 @@ public class Room : MonoBehaviour
 
         /* WFC Implementation */
 
-        //WaveCollapseGenerator.Instance.CollapseRoom(this);
+        WaveCollapseGenerator.Instance.CollapseRoom(this);
     }
 
     private HashSet<Vector2Int> CreatePuddle()

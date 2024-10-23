@@ -73,15 +73,18 @@ public class RoomGenerator : AbstractGenerator
         corridors = ConnectRooms(roomCenters);
         tilemapDrawer.PaintCorridorTiles(corridors, themeDataContainer.GetThemeTileData(ThemesEnum.None).FloorTile);
 
-        StartCoroutine(PaintRooms(CurrentRooms));
+        //StartCoroutine(PaintRooms(CurrentRooms));
     }
 
-    private IEnumerator PaintRooms(List<Room> rooms) 
-    {
-        WaitForSeconds delay = new WaitForSeconds(0.1f);
+    //private IEnumerator PaintRooms(List<Room> rooms) 
+    //{
+    //    //WaitForSeconds delay = new WaitForSeconds(0.1f);
 
-
-    }
+    //    //foreach (Room room in rooms)
+    //    //{
+    //    //    //yield return room.IsRoomCollapsed;
+    //    //}
+    //}
 
     private List<BoundsInt> GenerateRoomBounds()
     {
