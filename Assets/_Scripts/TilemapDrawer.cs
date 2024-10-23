@@ -24,7 +24,7 @@ public class TilemapDrawer : MonoBehaviour
 
     public void PaintWaveCollapseTile(Vector2Int position, TileBase tile)
     {
-        PaintSingleTile(WfcTilemap, tile, position);
+        PaintSingleTile(RoomTilemap, tile, position);
     }
 
     private void PaintTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile)

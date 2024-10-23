@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using WaveCollapse;
@@ -53,7 +54,6 @@ public class WaveCollapseGenerator : AbstractGenerator
 
     private void ExecuteWaveCollapse()
     {
-        iterations = 0;
         gridCells.Clear();
         CreateGrid();
     }
@@ -67,100 +67,55 @@ public class WaveCollapseGenerator : AbstractGenerator
     {
         if (tilesParent != null)
             DestroyImmediate(tilesParent);
-        tilesParent = new GameObject("TileCellParent");
-        Transform parent = tilesParent.transform;
+
+        tileGrid = new TileData[gridDimensions.x, gridDimensions.y];
+        List<Vector2Int> cellsToCollapse = new();
 
         for (int y = 0; y < gridDimensions.y; y++)
         {
             for (int x = 0; x < gridDimensions.x; x++)
             {
-                TileCell tileCell = Instantiate(tileCellObject, new Vector2(x, y), Quaternion.identity, parent).GetComponent<TileCell>();
-                tileCell.Create(allPossibleTiles, false, ThemesEnum.Snow);
-                gridCells.Add(tileCell);
+                cellsToCollapse.Add(new Vector2Int(x, y));
             }
         }
 
-        tileGrid = new TileData[gridDimensions.x, gridDimensions.y];
-
-        StartCoroutine(RunWaveCollapseUntilComplete());
+        ExecuteWaveCollapseAlgorithm(cellsToCollapse);
     }
 
     public void CollapseRoom(Room room)
     {
-        //tilesParent = new GameObject("TileCellParent");
-        //Transform parent = tilesParent.transform;
-
         if (room.RoomTheme != ThemesEnum.Snow)
-        {
-            Debug.Log("Room is not a snow theme, returning");
             return;
-        }
 
-        TileData[,] tileDataGrid = new TileData[room.roomBounds.size.x, room.roomBounds.size.y];
         List<Vector2Int> cellsToCollapse = new List<Vector2Int>(room.RoomPositions);
 
-        //CollapseWave(tileDataGrid, cellsToCollapse);
-
-        CollapseRoomForReal(cellsToCollapse);
+        ExecuteWaveCollapseAlgorithm(cellsToCollapse);
     }
 
-    private IEnumerator RunWaveCollapseUntilComplete()
+    public void ExecuteWaveCollapseAlgorithm(List<Vector2Int> cellsToCollapse)
     {
-        int max = 10000000;
-        int current = 0;
-        List<Vector2Int> toCollapse = new();
-        while (HasEmptyTiles() || current < max)
+        Dictionary<Vector2Int, TileData> positionsTilesDict = new();
+
+        // Iterate over room positions and assign tile data based on neighborhood compatibility
+        foreach (Vector2Int position in cellsToCollapse)
         {
-            current++;
-            CollapseWave(toCollapseList);
-
-            if (!HasEmptyTiles())
-                break;
-
-            yield return delay;
-        }
-    }
-
-    private bool HasEmptyTiles()
-    {
-        foreach (var tile in tileGrid)
-        {
-            if (tile == null)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private bool IsInsideRoomPositions(Vector2Int position, List<Vector2Int> roomPositions)
-    {
-        return roomPositions.Contains(position);
-    }
-
-    private void CollapseWave(List<Vector2Int> toCollapse)
-    {
-        if (toCollapse.Count == 0)
-            toCollapse.Add(new Vector2Int(gridDimensions.x / 2, gridDimensions.y / 2));
-
-        List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
-
-        int x = toCollapse[0].x;
-        int y = toCollapse[0].y;
-
-
-        for (int i = 0; i < Direction2D.cardinalDirectionsList.Count; i++)
-        {
-            Vector2Int currentDirection = Direction2D.cardinalDirectionsList[i];
-            Vector2Int neighbour = new Vector2Int(x + currentDirection.x, y + currentDirection.y);
-
-            if (!IsInsideGrid(tileGrid, neighbour.x, neighbour.y))
+            if (positionsTilesDict.ContainsKey(position))
                 continue;
 
-            TileData neighbourTileData = tileGrid[neighbour.x, neighbour.y];
+            // Make a fresh copy of all possible tiles
+            List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
 
-            if (neighbourTileData != null)
+            int x = position.x;
+            int y = position.y;
+
+            for (int i = 0; i < Direction2D.cardinalDirectionsList.Count; i++)
             {
+                Vector2Int currentDirection = Direction2D.cardinalDirectionsList[i];
+                Vector2Int neighbour = new Vector2Int(x + currentDirection.x, y + currentDirection.y);
+
+                if (!positionsTilesDict.TryGetValue(neighbour, out TileData neighbourTileData))
+                    continue; 
+
                 switch (i)
                 {
                     case 0: // North
@@ -177,89 +132,27 @@ public class WaveCollapseGenerator : AbstractGenerator
                         break;
                 }
             }
-            else
-            {
-                if (!toCollapse.Contains(neighbour))
-                    toCollapse.Add(neighbour);
-            }
-
-            if (possibleTiles.Count > 0)
-            {
-                // TODO: Apply weights here.
-                TileData tile = possibleTiles[Random.Range(0, possibleTiles.Count)];
-                tileGrid[x, y] = tile;
-
-                tilemapDrawer.PaintWaveCollapseTile(new Vector2Int(x, y), tile.tileSprite);
-                toCollapse.RemoveAt(0);
-            }
-        }
-    }
-
-    public void CollapseRoomForReal(List<Vector2Int> roomPositions)
-    {
-        Dictionary<Vector2Int, TileData> positionsTilesDict = new();
-        List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
-
-        // 1), 2) Assign a tiledata for each room pos.
-        foreach (Vector2Int roomPosition in roomPositions)
-        {
-            Debug.Log("Adding position to dict:" + roomPosition);
-            if (positionsTilesDict.ContainsKey(roomPosition))
-                continue;
-
-            TileData tileData = possibleTiles[Random.Range(0, possibleTiles.Count)];
-            positionsTilesDict.Add(roomPosition, tileData);
-        }
-
-        // 3) Each tile checks and filters possible tiles based on its neighbours.
-        foreach (Vector2Int roomPosition in roomPositions)
-        {
-            int x = roomPosition.x;
-            int y = roomPosition.y;
-
-            for (int i = 0; i < Direction2D.cardinalDirectionsList.Count; i++)
-            {
-                Vector2Int currentDirection = Direction2D.cardinalDirectionsList[i];
-                Vector2Int neighbour = new Vector2Int(x + currentDirection.x, y + currentDirection.y);
-                Debug.Log("Checking neighbour position at: " + neighbour);
-
-                if (!IsInsideRoomPositions(neighbour, roomPositions))
-                    continue;
-
-                // 4) Filter possible tiles based on nieghbourd.
-                if (positionsTilesDict.TryGetValue(neighbour, out TileData neighbourTileData))
-                {
-                    switch (i)
-                    {
-                        case 0: // North
-                            possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.southNeighbours);
-                            break;
-                        case 1: // East
-                            possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.westNeighbours);
-                            break;
-                        case 2: // South
-                            possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.northNeighbours);
-                            break;
-                        case 3: // West
-                            possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.eastNeighbours);
-                            break;
-                    }
-                }
-                else { } // TBD. 
-            }
 
             if (possibleTiles.Count > 0)
             {
                 TileData tileData = possibleTiles[Random.Range(0, possibleTiles.Count)];
-
-                tilemapDrawer.PaintWaveCollapseTile(new Vector2Int(x, y), tileData.tileSprite);
+                positionsTilesDict.Add(position, tileData);
             }
             else
             {
-                //Debug.Log("No possible tile for tile at position: " + roomPosition);
+                Debug.LogWarning("No possible tile for tile at position: " + position);
             }
         }
+
+        foreach (KeyValuePair<Vector2Int, TileData> kvp in positionsTilesDict)
+        {
+            Vector2Int position = kvp.Key;
+            TileData tileData = kvp.Value;
+
+            tilemapDrawer.PaintWaveCollapseTile(position, tileData.tileSprite);
+        }
     }
+
 
     private List<TileData> FilterPossibleTiles(List<TileData> possibleTiles, List<TileData> validOptions)
     {
@@ -273,11 +166,6 @@ public class WaveCollapseGenerator : AbstractGenerator
         }
 
         return possibleTiles;
-    }
-
-    private bool IsInsideGrid(TileData[,] grid, int x, int y)
-    {
-        return x >= 0 && x < grid.GetLength(0) && y >= 0 && y < grid.GetLength(1);
     }
 
     public override void OnGenerate()
