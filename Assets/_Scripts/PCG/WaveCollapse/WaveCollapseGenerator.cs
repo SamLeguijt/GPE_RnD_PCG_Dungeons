@@ -15,25 +15,14 @@ public class WaveCollapseGenerator : AbstractGenerator
     public static WaveCollapseGenerator Instance;
 
     [Header("References")]
-    [SerializeField] private GameObject tileCellObject = null;
     [SerializeField] private TilemapDrawer tilemapDrawer;
-    [SerializeField] private TileData[] allPossibleTiles;
+    //[SerializeField] private TileData[] allPossibleTiles;
+    [SerializeField] private ThemeTileData themeTileContainer;
 
     [Header("Generate settings")]
     [SerializeField] private Vector2Int gridDimensions = Vector2Int.one;
     [SerializeField] private float delay = 0.1f;
     [SerializeField] private bool delayedGeneration = false;
-
-    private List<TileCell> gridCells = new List<TileCell>();
-    private Coroutine delayedWaveCollapseCoroutine = null;
-
-    private int iterations = 0;
-    private static GameObject tilesParent = null;
-
-    List<Vector2Int> toCollapseList = new List<Vector2Int>();
-    Dictionary<Vector2Int, TileData> positionsTilesDict = new();
-
-    TileData[,] tileGrid;
 
     private void OnValidate()
     {
@@ -52,27 +41,16 @@ public class WaveCollapseGenerator : AbstractGenerator
     {
         StopAllCoroutines();
 
-        if (delayedWaveCollapseCoroutine != null)
-            delayedWaveCollapseCoroutine = null;
-
-        if (tilesParent != null)
-            DestroyImmediate(tilesParent);
-
-        positionsTilesDict.Clear();
         tilemapDrawer.Clear(tilemapDrawer.RoomTilemap);
     }
 
     private void CreateGridBasedWFC()
     {
-        gridCells.Clear();
         CreateGrid();
     }
 
     private void CreateGrid()
     {
-        if (tilesParent != null)
-            DestroyImmediate(tilesParent);
-
         List<Vector2Int> cellsToCollapse = new();
 
         for (int y = 0; y < gridDimensions.y; y++)
@@ -111,7 +89,7 @@ public class WaveCollapseGenerator : AbstractGenerator
             if (positionsTilesDict.ContainsKey(cellPosition))
                 continue;
 
-            List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
+            List<TileData> possibleTiles = new List<TileData>(themeTileContainer.PossibleTiles);
 
             int x = cellPosition.x;
             int y = cellPosition.y;
@@ -156,7 +134,7 @@ public class WaveCollapseGenerator : AbstractGenerator
             }
             else
             {
-                Debug.LogWarning("No possible tile for tile at position: " + cellPosition);
+                //Debug.LogWarning("No possible tile for tile at position: " + cellPosition);
             }
         }
 
@@ -188,7 +166,7 @@ public class WaveCollapseGenerator : AbstractGenerator
         // Initialize entropy for each cell based on all possible tiles.
         foreach (Vector2Int cellPosition in cellsToCollapse)
         {
-            entropyDict[cellPosition] = allPossibleTiles.Length; // Maximum possible tiles initially
+            entropyDict[cellPosition] = themeTileContainer.PossibleTiles.Count; // Maximum possible tiles initially
         }
 
         // Run until all cells are collapsed
@@ -199,7 +177,7 @@ public class WaveCollapseGenerator : AbstractGenerator
             // Select the cell with the lowest entropy
             Vector2Int cellToCollapse = GetCellWithLowestEntropy(cellsToCollapse, entropyDict);
 
-            List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
+            List<TileData> possibleTiles = new List<TileData>(themeTileContainer.PossibleTiles);
             int x = cellToCollapse.x;
             int y = cellToCollapse.y;
 
@@ -318,7 +296,7 @@ public class WaveCollapseGenerator : AbstractGenerator
     private int CalculateEntropyFor(Vector2Int cell, Dictionary<Vector2Int, TileData> positionTilesDict)
     {
         // Get all possible tiles for this cell based on the current state of its neighbors.
-        List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
+        List<TileData> possibleTiles = new List<TileData>(themeTileContainer.PossibleTiles);
 
         int x = cell.x;
         int y = cell.y;
@@ -366,6 +344,4 @@ public class WaveCollapseGenerator : AbstractGenerator
 
         return possibleTiles;
     }
-
-
 }
