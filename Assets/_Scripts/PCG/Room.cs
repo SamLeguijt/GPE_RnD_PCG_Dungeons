@@ -21,6 +21,8 @@ public class Room : MonoBehaviour
     private RoomGenerator roomGenerator;
     private WaveCollapseGenerator waveCollapseGenerator;
 
+    public bool IsRoomCollapsed = false;
+
     public void SetupRoom(RoomGenerator generator, BoundsInt bounds, TilemapDrawer drawer, ThemeDataContainer themeDataContainer, ThemesEnum theme = ThemesEnum.None)
     {
         roomGenerator = generator;
@@ -105,7 +107,7 @@ public class Room : MonoBehaviour
 
         /* WFC Implementation */
 
-        WaveCollapseGenerator.Instance.CollapseRoom(this);
+        //WaveCollapseGenerator.Instance.CollapseRoom(this);
     }
 
     private HashSet<Vector2Int> CreatePuddle()

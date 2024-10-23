@@ -31,6 +31,7 @@ public class WaveCollapseGenerator : AbstractGenerator
     private static GameObject tilesParent = null;
 
     List<Vector2Int> toCollapseList = new List<Vector2Int>();
+    Dictionary<Vector2Int, TileData> positionsTilesDict = new();
 
     TileData[,] tileGrid;
 
@@ -42,25 +43,29 @@ public class WaveCollapseGenerator : AbstractGenerator
         Instance = this;
     }
 
-    private void StartWaveCollapse()
+    public override void OnGenerate()
     {
-        if (delayedGeneration)
-            delayedWaveCollapseCoroutine = StartCoroutine(WaveCollapseCoroutine());
-        else
-        {
-            ExecuteWaveCollapse();
-        }
+        CreateGridBasedWFC();
     }
 
-    private void ExecuteWaveCollapse()
+    public override void OnClear()
+    {
+        StopAllCoroutines();
+
+        if (delayedWaveCollapseCoroutine != null)
+            delayedWaveCollapseCoroutine = null;
+
+        if (tilesParent != null)
+            DestroyImmediate(tilesParent);
+
+        positionsTilesDict.Clear();
+        tilemapDrawer.Clear(tilemapDrawer.RoomTilemap);
+    }
+
+    private void CreateGridBasedWFC()
     {
         gridCells.Clear();
         CreateGrid();
-    }
-
-    private IEnumerator WaveCollapseCoroutine()
-    {
-        yield return null;
     }
 
     private void CreateGrid()
@@ -68,7 +73,6 @@ public class WaveCollapseGenerator : AbstractGenerator
         if (tilesParent != null)
             DestroyImmediate(tilesParent);
 
-        tileGrid = new TileData[gridDimensions.x, gridDimensions.y];
         List<Vector2Int> cellsToCollapse = new();
 
         for (int y = 0; y < gridDimensions.y; y++)
@@ -79,42 +83,120 @@ public class WaveCollapseGenerator : AbstractGenerator
             }
         }
 
-        ExecuteWaveCollapseAlgorithm(cellsToCollapse);
+        StartCoroutine(ExecuteWaveCollapseAlgorithmEntropied(cellsToCollapse));
     }
 
     public void CollapseRoom(Room room)
     {
-        if (room.RoomTheme != ThemesEnum.Snow)
-            return;
+        // TODO: Tile selection based on theme.
+        //if (room.RoomTheme != ThemesEnum.Snow)
+        //    return;
 
         List<Vector2Int> cellsToCollapse = new List<Vector2Int>(room.RoomPositions);
 
-        ExecuteWaveCollapseAlgorithm(cellsToCollapse);
+        //ExecuteWaveFunctionCollapseAlgorithm(cellsToCollapse);
+        StartCoroutine(ExecuteWaveCollapseAlgorithmEntropied(cellsToCollapse));
+
     }
 
-    public void ExecuteWaveCollapseAlgorithm(List<Vector2Int> cellsToCollapse)
+    public void ExecuteWaveFunctionCollapseAlgorithm(List<Vector2Int> cellsToCollapse)
     {
         Dictionary<Vector2Int, TileData> positionsTilesDict = new();
 
-        // Iterate over room positions and assign tile data based on neighborhood compatibility
-        foreach (Vector2Int position in cellsToCollapse)
+        foreach (Vector2Int cellPosition in cellsToCollapse)
         {
-            if (positionsTilesDict.ContainsKey(position))
+            // Skip already collapsed tiles. 
+            if (positionsTilesDict.ContainsKey(cellPosition))
                 continue;
 
-            // Make a fresh copy of all possible tiles
             List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
 
-            int x = position.x;
-            int y = position.y;
+            int x = cellPosition.x;
+            int y = cellPosition.y;
 
+            // Check in NESW directions for a neighbouring tile and filter possible tiles based on them.
+            for (int i = 0; i < Direction2D.cardinalDirectionsList.Count; i++)
+            {
+                Vector2Int currentDirection = Direction2D.cardinalDirectionsList[i];
+                Vector2Int neighbour = new Vector2Int(x + currentDirection.x, y + currentDirection.y);
+
+                // Skip if neighbour is not one of the cells to collapse.
+                if (!cellsToCollapse.Contains(neighbour))
+                    continue;
+
+                // Get the TileData of the neighbour to filter possible tiles.
+                if (!positionsTilesDict.TryGetValue(neighbour, out TileData neighbourTileData))
+                    continue; 
+
+                // Filter possible tiles based on the current direction and their allowed nighbours on the opposite direction.
+                switch (i)
+                {
+                    case 0: // North
+                        possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.southNeighbours);
+                        break;
+                    case 1: // East
+                        possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.westNeighbours);
+                        break;
+                    case 2: // South
+                        possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.northNeighbours);
+                        break;
+                    case 3: // West
+                        possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.eastNeighbours);
+                        break;
+                }
+            }
+
+            // Add a random based tile data from the possibilities with the current cell to the dict.
+            if (possibleTiles.Count > 0)
+            {
+                TileData tileData = possibleTiles[Random.Range(0, possibleTiles.Count)];
+                positionsTilesDict.Add(cellPosition, tileData);
+            }
+            else
+            {
+                Debug.LogWarning("No possible tile for tile at position: " + cellPosition);
+            }
+        }
+
+        // Paint the tile on each cell position.
+        foreach (KeyValuePair<Vector2Int, TileData> kvp in positionsTilesDict)
+        {
+            Vector2Int position = kvp.Key;
+            TileData tileData = kvp.Value;
+
+            tilemapDrawer.PaintWaveCollapseTile(position, tileData.tileSprite);
+        }
+    }
+
+    public IEnumerator ExecuteWaveCollapseAlgorithmEntropied(List<Vector2Int> cellsToCollapse)
+    {
+        WaitForSeconds delay = new WaitForSeconds(this.delay);
+        Dictionary<Vector2Int, int> entropyDict = new();
+
+        // Initialize entropy for each cell based on all possible tiles.
+        foreach (Vector2Int cellPosition in cellsToCollapse)
+        {
+            entropyDict[cellPosition] = allPossibleTiles.Length; // Maximum possible tiles initially
+        }
+
+        // Run until all cells are collapsed
+        while (cellsToCollapse.Count > 0)
+        {
+            // Select the cell with the lowest entropy
+            Vector2Int cellToCollapse = GetCellWithLowestEntropy(cellsToCollapse, entropyDict);
+
+            List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
+            int x = cellToCollapse.x;
+            int y = cellToCollapse.y;
+
+            // Check in NESW directions for a neighboring tile and filter possible tiles based on them.
             for (int i = 0; i < Direction2D.cardinalDirectionsList.Count; i++)
             {
                 Vector2Int currentDirection = Direction2D.cardinalDirectionsList[i];
                 Vector2Int neighbour = new Vector2Int(x + currentDirection.x, y + currentDirection.y);
 
                 if (!positionsTilesDict.TryGetValue(neighbour, out TileData neighbourTileData))
-                    continue; 
+                    continue;
 
                 switch (i)
                 {
@@ -136,23 +218,90 @@ public class WaveCollapseGenerator : AbstractGenerator
             if (possibleTiles.Count > 0)
             {
                 TileData tileData = possibleTiles[Random.Range(0, possibleTiles.Count)];
-                positionsTilesDict.Add(position, tileData);
+                positionsTilesDict.Add(cellToCollapse, tileData);
+                cellsToCollapse.Remove(cellToCollapse);
+
+                // Update entropy for neighbors based on this new assignment
+                UpdateNeighborEntropy(cellToCollapse, entropyDict);
             }
             else
             {
-                Debug.LogWarning("No possible tile for tile at position: " + position);
+                Debug.LogWarning("No possible tile for tile at position: " + cellToCollapse);
             }
         }
 
+        // Final painting of all tiles after the algorithm finishes.
         foreach (KeyValuePair<Vector2Int, TileData> kvp in positionsTilesDict)
         {
+
             Vector2Int position = kvp.Key;
             TileData tileData = kvp.Value;
 
             tilemapDrawer.PaintWaveCollapseTile(position, tileData.tileSprite);
+
+            yield return delay;
         }
     }
 
+    private Vector2Int GetCellWithLowestEntropy(List<Vector2Int> cellsToCollapse, Dictionary<Vector2Int, int> entropyDict)
+    {
+        // Sort the list of cells by their entropy and pick the first one (lowest entropy)
+        return cellsToCollapse.OrderBy(c => entropyDict[c]).First();
+    }
+
+    private void UpdateNeighborEntropy(Vector2Int cell, Dictionary<Vector2Int, int> entropyDict)
+    {
+        // Logic to adjust entropy for neighboring cells based on the new assignment
+        foreach (Vector2Int dir in Direction2D.cardinalDirectionsList)
+        {
+            Vector2Int neighbour = new Vector2Int(cell.x + dir.x, cell.y + dir.y);
+
+            if (entropyDict.ContainsKey(neighbour))
+            {
+                // Recalculate possible tiles and adjust entropy
+                int newEntropy = CalculateEntropyFor(neighbour);
+                entropyDict[neighbour] = newEntropy;
+            }
+        }
+    }
+
+    private int CalculateEntropyFor(Vector2Int cell, Dictionary<Vector2Int, TileData> positionTilesDict)
+    {
+        // Get all possible tiles for this cell based on the current state of its neighbors.
+        List<TileData> possibleTiles = new List<TileData>(allPossibleTiles);
+
+        int x = cell.x;
+        int y = cell.y;
+
+        // Check NESW directions for neighbor constraints and filter possible tiles.
+        for (int i = 0; i < Direction2D.cardinalDirectionsList.Count; i++)
+        {
+            Vector2Int currentDirection = Direction2D.cardinalDirectionsList[i];
+            Vector2Int neighbour = new Vector2Int(x + currentDirection.x, y + currentDirection.y);
+
+            if (positionTilesDict.TryGetValue(neighbour, out TileData neighbourTileData))
+            {
+                switch (i)
+                {
+                    case 0: // North
+                        possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.southNeighbours);
+                        break;
+                    case 1: // East
+                        possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.westNeighbours);
+                        break;
+                    case 2: // South
+                        possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.northNeighbours);
+                        break;
+                    case 3: // West
+                        possibleTiles = FilterPossibleTiles(possibleTiles, neighbourTileData.eastNeighbours);
+                        break;
+                }
+            }
+        }
+
+        // Return the count of possible tiles as the entropy.
+        return possibleTiles.Count;
+    }
 
     private List<TileData> FilterPossibleTiles(List<TileData> possibleTiles, List<TileData> validOptions)
     {
@@ -168,21 +317,5 @@ public class WaveCollapseGenerator : AbstractGenerator
         return possibleTiles;
     }
 
-    public override void OnGenerate()
-    {
-        StartWaveCollapse();
-    }
-
-    public override void OnClear()
-    {
-        StopAllCoroutines();
-
-        if (delayedWaveCollapseCoroutine != null)
-            delayedWaveCollapseCoroutine = null;
-
-        if (tilesParent != null)
-            DestroyImmediate(tilesParent);
-
-        tilemapDrawer.Clear(tilemapDrawer.WfcTilemap);
-    }
+   
 }

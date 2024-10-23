@@ -25,6 +25,7 @@ public class RoomGenerator : AbstractGenerator
     [SerializeField] private Vector2Int roomSizeMax = Vector2Int.one;
     [SerializeField, Range(0, 15)] private int roomPosOffset = 1;
     [SerializeField] private bool useAdditionalRandomWalk = false;
+    [SerializeField] private float roomPaintDelay = 0.5f;
 
     [field: Header("Visualization")]
     [field: SerializeField] public bool DrawGizmos { get; private set; } = false;
@@ -71,6 +72,15 @@ public class RoomGenerator : AbstractGenerator
 
         corridors = ConnectRooms(roomCenters);
         tilemapDrawer.PaintCorridorTiles(corridors, themeDataContainer.GetThemeTileData(ThemesEnum.None).FloorTile);
+
+        StartCoroutine(PaintRooms(CurrentRooms));
+    }
+
+    private IEnumerator PaintRooms(List<Room> rooms) 
+    {
+        WaitForSeconds delay = new WaitForSeconds(0.1f);
+
+
     }
 
     private List<BoundsInt> GenerateRoomBounds()
