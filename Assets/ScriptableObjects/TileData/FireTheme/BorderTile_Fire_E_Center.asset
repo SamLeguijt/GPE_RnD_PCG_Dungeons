@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2374ec9723b70a0468fc0d314c6fae1b, type: 3}
+  m_Name: BorderTile_Fire_E_Center
+  m_EditorClassIdentifier: 
+  tileSprite: {fileID: 11400000, guid: 1e378dd843c5a794ea051efde728de78, type: 2}
+  theme: 1
+  tileType: 4
+  northNeighbours:
+  - {fileID: 11400000}
+  - {fileID: 11400000, guid: c8cde35589e872544b51a03009eea624, type: 2}
+  - {fileID: 11400000, guid: d29664bb4b3a86543a17a1f5083914b6, type: 2}
+  eastNeighbours:
+  - {fileID: 11400000, guid: 90efa8b58639bc54d92b43f9f00a854f, type: 2}
+  - {fileID: 11400000, guid: 4e21d19be203a0845a15b7921c879d98, type: 2}
+  - {fileID: 11400000, guid: 174c6d83e0a63384b973946ad9e0faef, type: 2}
+  - {fileID: 11400000, guid: 1f7e521f04a67d84ab1a1bf60fcf537c, type: 2}
+  southNeighbours:
+  - {fileID: 11400000}
+  - {fileID: 11400000, guid: 426d9d5aad46249499c080a18e7eb702, type: 2}
+  - {fileID: 11400000, guid: 8957602fbd6238b4da194be4df6ce0fb, type: 2}
+  westNeighbours:
+  - {fileID: 11400000, guid: 7887e12e5bbe70e4d8076f532772617b, type: 2}
+  - {fileID: 11400000, guid: 619f0dfa984c55846ae4054a15dea323, type: 2}
+  - {fileID: 11400000, guid: 645ed7ff1750fdb4b984b852de755e8e, type: 2}
